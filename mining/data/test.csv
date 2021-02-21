@@ -1,0 +1,1987 @@
+"ids","error","source","code","solution"
+"1","junit.framework.AssertionFailedError","/source/org/jfree/chart/util/ShapeList.java","@@ -108,7 +108,14 @@ public boolean equals(Object obj) {
+         if (!(obj instanceof ShapeList)) {
+             return false;
+         }
+         return super.equals(obj);
+ 
+     }
+ 
+","@@ -108,7 +108,14 @@ public boolean equals(Object obj) {
+         if (!(obj instanceof ShapeList)) {
+             return false;
+         }
+         ShapeList that = (ShapeList) obj;
+         int listSize = size();
+         for (int i = 0; i < listSize; i +) {
+            if (!ShapeUtilities.equal((Shape) get(i), (Shape) that.get(i))) {
+                return false;
+            }
+         }
+         return true;
+ 
+     }
+ 
+"
+"2","junit.framework.ComparisonFailure","/source/org/jfree/chart/imagemap/StandardToolTipTagFragmentGenerator.java","@@ -62,7 +62,7 @@ public StandardToolTipTagFragmentGenerator() {
+      * @return The formatted HTML area tag attribute(s).
+      */
+     public String generateToolTipFragment(String toolTipText) {
+        return "" title=\"""" + toolTipText
+             + ""\"" alt=\""\"""";
+     }
+ 
+","@@ -62,7 +62,7 @@ public StandardToolTipTagFragmentGenerator() {
+      * @return The formatted HTML area tag attribute(s).
+      */
+     public String generateToolTipFragment(String toolTipText) {
+        return "" title=\"""" + ImageMapUtilities.htmlEscape(toolTipText) 
+             + ""\"" alt=\""\"""";
+     }
+ 
+"
+"3","java.lang.IllegalArgumentException","/source/org/jfree/data/time/TimeSeries.java","@@ -941,7 +941,7 @@ public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)
+             endIndex = -(endIndex + 1); // this is first item AFTER end period
+             endIndex = endIndex - 1;    // so this is last item BEFORE end
+         }
+        if (endIndex < 0) {
+             emptyRange = true;
+         }
+         if (emptyRange) {
+","@@ -941,7 +941,7 @@ public TimeSeries createCopy(RegularTimePeriod start, RegularTimePeriod end)
+             endIndex = -(endIndex + 1); // this is first item AFTER end period
+             endIndex = endIndex - 1;    // so this is last item BEFORE end
+         }
+        if ((endIndex < 0)  || (endIndex < startIndex)) {
+             emptyRange = true;
+         }
+         if (emptyRange) {
+"
+"4","junit.framework.AssertionFailedError","/source/org/jfree/data/time/Week.java","@@ -172,7 +172,7 @@ public Week(Date time) {
+      */
+     public Week(Date time, TimeZone zone) {
+         // defer argument checking...
+        this(time, RegularTimePeriod.DEFAULT_TIME_ZONE, Locale.getDefault());
+     }
+ 
+     /**
+","@@ -172,7 +172,7 @@ public Week(Date time) {
+      */
+     public Week(Date time, TimeZone zone) {
+         // defer argument checking...
+        this(time, zone, Locale.getDefault());
+     }
+ 
+     /**
+"
+"5","junit.framework.AssertionFailedError","/source/org/jfree/data/time/TimePeriodValues.java","@@ -297,9 +297,9 @@ private void updateBounds(TimePeriod period, int index) {
+         }
+         
+         if (this.maxMiddleIndex >= 0) {
+-            long s = getDataItem(this.minMiddleIndex).getPeriod().getStart()
+                 .getTime();
+-            long e = getDataItem(this.minMiddleIndex).getPeriod().getEnd()
+                 .getTime();
+             long maxMiddle = s + (e - s) / 2;
+             if (middle > maxMiddle) {
+","@@ -297,9 +297,9 @@ private void updateBounds(TimePeriod period, int index) {
+         }
+         
+         if (this.maxMiddleIndex >= 0) {
++            long s = getDataItem(this.maxMiddleIndex).getPeriod().getStart()
+                 .getTime();
++            long e = getDataItem(this.maxMiddleIndex).getPeriod().getEnd()
+                 .getTime();
+             long maxMiddle = s + (e - s) / 2;
+             if (middle > maxMiddle) {
+"
+"6","java.lang.IndexOutOfBoundsException","/source/org/jfree/data/xy/XYSeries.java","@@ -541,11 +541,15 @@ public XYDataItem addOrUpdate(Number x, Number y) {
+         if (x == null) {
+             throw new IllegalArgumentException(""Null 'x' argument."");
+         }
+ 
+         // if we get to here, we know that duplicate X values are not permitted
+         XYDataItem overwritten = null;
+         int index = indexOf(x);
+-        if (index >= 0 && !this.allowDuplicateXValues) {
+             XYDataItem existing = (XYDataItem) this.data.get(index);
+             try {
+                 overwritten = (XYDataItem) existing.clone();
+","@@ -541,11 +541,15 @@ public XYDataItem addOrUpdate(Number x, Number y) {
+         if (x == null) {
+             throw new IllegalArgumentException(""Null 'x' argument."");
+         }
++        if (this.allowDuplicateXValues) {
++            add(x, y);
++            return null;
++        }
+ 
+         // if we get to here, we know that duplicate X values are not permitted
+         XYDataItem overwritten = null;
+         int index = indexOf(x);
++        if (index >= 0) {
+             XYDataItem existing = (XYDataItem) this.data.get(index);
+             try {
+                 overwritten = (XYDataItem) existing.clone();
+"
+"7","junit.framework.AssertionFailedError","/source/org/jfree/data/time/TimeSeries.java","@@ -1054,6 +1054,8 @@ public TimeSeries createCopy(int start, int end)
+             throw new IllegalArgumentException(""Requires start <= end."");
+         }
+         TimeSeries copy = (TimeSeries) super.clone();
+         copy.data = new java.util.ArrayList();
+         if (this.data.size() > 0) {
+             for (int index = start; index <= end; index++) {
+","@@ -1054,6 +1054,8 @@ public TimeSeries createCopy(int start, int end)
+             throw new IllegalArgumentException(""Requires start <= end."");
+         }
+         TimeSeries copy = (TimeSeries) super.clone();
++        copy.minY = Double.NaN;
++        copy.maxY = Double.NaN;
+         copy.data = new java.util.ArrayList();
+         if (this.data.size() > 0) {
+             for (int index = start; index <= end; index++) {
+"
+"8","java.lang.NullPointerException","/source/org/jfree/chart/plot/XYPlot.java","@@ -4490,6 +4490,7 @@ public Range getDataRange(ValueAxis axis) {
+                     }
+                 }
+                 
+                     Collection c = r.getAnnotations();
+                     Iterator i = c.iterator();
+                     while (i.hasNext()) {
+@@ -4498,6 +4499,7 @@ public Range getDataRange(ValueAxis axis) {
+                             includedAnnotations.add(a);
+                         }
+                     }
+             }
+         }
+ 
+","@@ -4490,6 +4490,7 @@ public Range getDataRange(ValueAxis axis) {
+                     }
+                 }
+                 
++                if (r != null) {
+                     Collection c = r.getAnnotations();
+                     Iterator i = c.iterator();
+                     while (i.hasNext()) {
+@@ -4498,6 +4499,7 @@ public Range getDataRange(ValueAxis axis) {
+                             includedAnnotations.add(a);
+                         }
+                     }
++                }
+             }
+         }
+ 
+"
+"9","java.lang.NullPointerException","/source/org/jfree/data/general/DatasetUtilities.java","@@ -752,12 +752,19 @@ public static Range iterateDomainBounds(XYDataset dataset,
+             for (int series = 0; series < seriesCount; series++) {
+                 int itemCount = dataset.getItemCount(series);
+                 for (int item = 0; item < itemCount; item++) {
+                     lvalue = intervalXYData.getStartXValue(series, item);
+                     uvalue = intervalXYData.getEndXValue(series, item);
+                     if (!Double.isNaN(lvalue)) {
+                         minimum = Math.min(minimum, lvalue);
+                     }
+                     if (!Double.isNaN(uvalue)) {
+                         maximum = Math.max(maximum, uvalue);
+                     }
+                 }
+@@ -1239,12 +1246,19 @@ public static Range iterateRangeBounds(XYDataset dataset,
+             for (int series = 0; series < seriesCount; series++) {
+                 int itemCount = dataset.getItemCount(series);
+                 for (int item = 0; item < itemCount; item++) {
+                     double lvalue = ixyd.getStartYValue(series, item);
+                     double uvalue = ixyd.getEndYValue(series, item);
+                     if (!Double.isNaN(lvalue)) {
+                         minimum = Math.min(minimum, lvalue);
+                     }
+                     if (!Double.isNaN(uvalue)) {
+                         maximum = Math.max(maximum, uvalue);
+                     }
+                 }
+","@@ -752,12 +752,19 @@ public static Range iterateDomainBounds(XYDataset dataset,
+             for (int series = 0; series < seriesCount; series++) {
+                 int itemCount = dataset.getItemCount(series);
+                 for (int item = 0; item < itemCount; item++) {
++                    double value = intervalXYData.getXValue(series, item);
+                     lvalue = intervalXYData.getStartXValue(series, item);
+                     uvalue = intervalXYData.getEndXValue(series, item);
++                    if (!Double.isNaN(value)) {
++                        minimum = Math.min(minimum, value);
++                        maximum = Math.max(maximum, value);
++                    }
+                     if (!Double.isNaN(lvalue)) {
+                         minimum = Math.min(minimum, lvalue);
++                        maximum = Math.max(maximum, lvalue);
+                     }
+                     if (!Double.isNaN(uvalue)) {
++                        minimum = Math.min(minimum, uvalue);
+                         maximum = Math.max(maximum, uvalue);
+                     }
+                 }
+@@ -1239,12 +1246,19 @@ public static Range iterateRangeBounds(XYDataset dataset,
+             for (int series = 0; series < seriesCount; series++) {
+                 int itemCount = dataset.getItemCount(series);
+                 for (int item = 0; item < itemCount; item++) {
++                    double value = ixyd.getYValue(series, item);
+                     double lvalue = ixyd.getStartYValue(series, item);
+                     double uvalue = ixyd.getEndYValue(series, item);
++                    if (!Double.isNaN(value)) {
++                        minimum = Math.min(minimum, value);
++                        maximum = Math.max(maximum, value);
++                    }
+                     if (!Double.isNaN(lvalue)) {
+                         minimum = Math.min(minimum, lvalue);
++                        maximum = Math.max(maximum, lvalue);
+                     }
+                     if (!Double.isNaN(uvalue)) {
++                        minimum = Math.min(minimum, uvalue);
+                         maximum = Math.max(maximum, uvalue);
+                     }
+                 }
+"
+"10","junit.framework.AssertionFailedError","/source/org/jfree/chart/renderer/category/AbstractCategoryItemRenderer.java","@@ -1794,7 +1794,7 @@ public LegendItemCollection getLegendItems() {
+         }
+         int index = this.plot.getIndexOf(this);
+         CategoryDataset dataset = this.plot.getDataset(index);
+-        if (dataset != null) {
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+","@@ -1794,7 +1794,7 @@ public LegendItemCollection getLegendItems() {
+         }
+         int index = this.plot.getIndexOf(this);
+         CategoryDataset dataset = this.plot.getDataset(index);
++        if (dataset == null) {
+             return result;
+         }
+         int seriesCount = dataset.getRowCount();
+"
+"11","junit.framework.AssertionFailedError","/source/org/jfree/chart/plot/MultiplePiePlot.java","@@ -142,7 +142,7 @@ public MultiplePiePlot() {
+      */
+     public MultiplePiePlot(CategoryDataset dataset) {
+         super();
+-        this.dataset = dataset;
+         PiePlot piePlot = new PiePlot(null);
+         this.pieChart = new JFreeChart(piePlot);
+         this.pieChart.removeLegend();
+","@@ -142,7 +142,7 @@ public MultiplePiePlot() {
+      */
+     public MultiplePiePlot(CategoryDataset dataset) {
+         super();
++        setDataset(dataset);
+         PiePlot piePlot = new PiePlot(null);
+         this.pieChart = new JFreeChart(piePlot);
+         this.pieChart.removeLegend();
+"
+"12","junit.framework.AssertionFailedError","/source/org/jfree/chart/util/ShapeUtilities.java","@@ -272,7 +272,7 @@ public static boolean equal(GeneralPath p1, GeneralPath p2) {
+             return false;
+         }
+         PathIterator iterator1 = p1.getPathIterator(null);
+-        PathIterator iterator2 = p1.getPathIterator(null);
+         double[] d1 = new double[6];
+         double[] d2 = new double[6];
+         boolean done = iterator1.isDone() && iterator2.isDone();
+","@@ -272,7 +272,7 @@ public static boolean equal(GeneralPath p1, GeneralPath p2) {
+             return false;
+         }
+         PathIterator iterator1 = p1.getPathIterator(null);
++        PathIterator iterator2 = p2.getPathIterator(null);
+         double[] d1 = new double[6];
+         double[] d2 = new double[6];
+         boolean done = iterator1.isDone() && iterator2.isDone();
+"
+"13","java.lang.IllegalArgumentException","/source/org/jfree/chart/block/BorderArrangement.java","@@ -452,7 +452,7 @@ protected Size2D arrangeFF(BlockContainer container, Graphics2D g2,
+         h[3] = h[2];
+         if (this.rightBlock != null) {
+             RectangleConstraint c4 = new RectangleConstraint(0.0,
+-                    new Range(0.0, constraint.getWidth() - w[2]),
+                     LengthConstraintType.RANGE, h[2], null,
+                     LengthConstraintType.FIXED);
+             Size2D size = this.rightBlock.arrange(g2, c4);
+","@@ -452,7 +452,7 @@ protected Size2D arrangeFF(BlockContainer container, Graphics2D g2,
+         h[3] = h[2];
+         if (this.rightBlock != null) {
+             RectangleConstraint c4 = new RectangleConstraint(0.0,
++                    new Range(0.0, Math.max(constraint.getWidth() - w[2], 0.0)),
+                     LengthConstraintType.RANGE, h[2], null,
+                     LengthConstraintType.FIXED);
+             Size2D size = this.rightBlock.arrange(g2, c4);
+"
+"14","java.lang.IndexOutOfBoundsException","/source/org/jfree/data/DefaultKeyedValues.java","@@ -315,30 +315,29 @@ private void rebuildIndex () {
+     public void removeValue(int index) {
+         this.keys.remove(index);
+         this.values.remove(index);
+-        if (index < this.keys.size()) {
+         rebuildIndex();
+-        }
+     }
+ 
+     /**
+      * Removes a value from the collection.
+      *
+      * @param key  the item key (<code>null</code> not permitted).
+      * 
+      * @throws IllegalArgumentException if <code>key</code> is 
+      *     <code>null</code>.
+      * @throws UnknownKeyException if <code>key</code> is not recognised.
+      */
+     public void removeValue(Comparable key) {
+         int index = getIndex(key);
+         if (index < 0) {
+-			return;
+         }
+         removeValue(index);
+     }
+     
+     /**
+      * Clears all values from the collection.
+      * 
+      * @since 1.0.2
+      */
+/source/org/jfree/data/DefaultKeyedValues2D.java @@ -454,12 +454,21 @@ public void removeColumn(int columnIndex) {
+     public void removeColumn(Comparable columnKey) {
+         Iterator iterator = this.rows.iterator();
+         while (iterator.hasNext()) {
+             DefaultKeyedValues rowData = (DefaultKeyedValues) iterator.next();
+                 rowData.removeValue(columnKey);
+         }
+         this.columnKeys.remove(columnKey);
+     }
+ 
+     /**
+      * Clears all the data and associated keys.
+      */
+","@@ -315,30 +315,29 @@ private void rebuildIndex () {
+     public void removeValue(int index) {
+         this.keys.remove(index);
+         this.values.remove(index);
+         rebuildIndex();
+     }
+ 
+     /**
+      * Removes a value from the collection.
+      *
+      * @param key  the item key (<code>null</code> not permitted).
+      * 
+      * @throws IllegalArgumentException if <code>key</code> is 
+      *     <code>null</code>.
+      * @throws UnknownKeyException if <code>key</code> is not recognised.
+      */
+     public void removeValue(Comparable key) {
+         int index = getIndex(key);
+         if (index < 0) {
++            throw new UnknownKeyException(""The key ("" + key 
++                    + "") is not recognised."");
+         }
+         removeValue(index);
+     }
+     
+     /**
+      * Clears all values from the collection.
+      * 
+      * @since 1.0.2
+      */
+/source/org/jfree/data/DefaultKeyedValues2D.java @@ -454,12 +454,21 @@ public void removeColumn(int columnIndex) {
+     public void removeColumn(Comparable columnKey) {
++    	if (columnKey == null) {
++    		throw new IllegalArgumentException(""Null 'columnKey' argument."");
++    	}
++    	if (!this.columnKeys.contains(columnKey)) {
++    		throw new UnknownKeyException(""Unknown key: "" + columnKey);
++    	}
+         Iterator iterator = this.rows.iterator();
+         while (iterator.hasNext()) {
+             DefaultKeyedValues rowData = (DefaultKeyedValues) iterator.next();
++            int index = rowData.getIndex(columnKey);
++            if (index >= 0) {
+                 rowData.removeValue(columnKey);
++            }
+         }
+         this.columnKeys.remove(columnKey);
+     }
+ 
+     /**
+      * Clears all the data and associated keys.
+      */
+"
+"15","java.lang.NullPointerException","/source/org/jfree/chart/plot/CategoryPlot.java","@@ -2163,6 +2163,9 @@ public boolean removeDomainMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2445,6 +2448,9 @@ public boolean removeRangeMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+/source/org/jfree/chart/plot/XYPlot.java @@ -2290,6 +2290,9 @@ public boolean removeDomainMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2526,6 +2529,9 @@ public boolean removeRangeMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+","@@ -2163,6 +2163,9 @@ public boolean removeDomainMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
++        if (markers == null) {
++            return false;
++        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2445,6 +2448,9 @@ public boolean removeRangeMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
++        if (markers == null) {
++            return false;
++        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+/source/org/jfree/chart/plot/XYPlot.java @@ -2290,6 +2290,9 @@ public boolean removeDomainMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundDomainMarkers.get(new Integer(
+                     index));
+         }
++        if (markers == null) {
++            return false;
++        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+@@ -2526,6 +2529,9 @@ public boolean removeRangeMarker(int index, Marker marker, Layer layer,
+             markers = (ArrayList) this.backgroundRangeMarkers.get(new Integer(
+                     index));
+         }
++        if (markers == null) {
++            return false;
++        }
+         boolean removed = markers.remove(marker);
+         if (removed && notify) {
+             fireChangeEvent();
+"
+"16","junit.framework.AssertionFailedError","/source/org/jfree/data/statistics/DefaultBoxAndWhiskerCategoryDataset.java","@@ -154,6 +154,7 @@ public void add(BoxAndWhiskerItem item, Comparable rowKey,
+                 && this.minimumRangeValueColumn == c))  {
+             updateBounds();
+         }
+             double minval = Double.NaN;
+             if (item.getMinOutlier() != null) {
+@@ -185,6 +186,7 @@ else if (minval < this.minimumRangeValue) {
+                 this.minimumRangeValueRow = r;
+                 this.minimumRangeValueColumn = c;
+             }
+         this.rangeBounds = new Range(this.minimumRangeValue,
+               this.maximumRangeValue);
+@@ -738,7 +740,44 @@ public List getOutliers(Comparable rowKey, Comparable columnKey) {
+      */
+     private void updateBounds() {
+         this.minimumRangeValue = Double.NaN;
+         this.maximumRangeValue = Double.NaN;
+     }
+     
+     /**
+","@@ -154,6 +154,7 @@ public void add(BoxAndWhiskerItem item, Comparable rowKey,
+                 && this.minimumRangeValueColumn == c))  {
+             updateBounds();
+         }
++        else {
+         
+             double minval = Double.NaN;
+             if (item.getMinOutlier() != null) {
+@@ -185,6 +186,7 @@ else if (minval < this.minimumRangeValue) {
+                 this.minimumRangeValueRow = r;
+                 this.minimumRangeValueColumn = c;
+             }
++        }
+         
+         this.rangeBounds = new Range(this.minimumRangeValue,
+               this.maximumRangeValue);
+@@ -738,7 +740,44 @@ public List getOutliers(Comparable rowKey, Comparable columnKey) {
+      */
+     private void updateBounds() {
+         this.minimumRangeValue = Double.NaN;
++        this.minimumRangeValueRow = -1;
++        this.minimumRangeValueColumn = -1;
+         this.maximumRangeValue = Double.NaN;
++        this.maximumRangeValueRow = -1;
++        this.maximumRangeValueColumn = -1;
++        int rowCount = getRowCount();
++        int columnCount = getColumnCount();
++        for (int r = 0; r < rowCount; r++) {
++            for (int c = 0; c < columnCount; c++) {
++                BoxAndWhiskerItem item = getItem(r, c);
++                if (item != null) {
++                    Number min = item.getMinOutlier();
++                    if (min != null) {
++                        double minv = min.doubleValue();
++                        if (!Double.isNaN(minv)) {
++                            if (minv < this.minimumRangeValue || Double.isNaN(
++                                    this.minimumRangeValue)) {
++                                this.minimumRangeValue = minv;
++                                this.minimumRangeValueRow = r;
++                                this.minimumRangeValueColumn = c;
++                            }
++                        }
++                    }
++                    Number max = item.getMaxOutlier();
++                    if (max != null) {
++                        double maxv = max.doubleValue();
++                        if (!Double.isNaN(maxv)) {
++                            if (maxv > this.maximumRangeValue || Double.isNaN(
++                                    this.maximumRangeValue)) {
++                                this.maximumRangeValue = maxv;
++                                this.maximumRangeValueRow = r;
++                                this.maximumRangeValueColumn = c;
++                            }
++                        }
++                    }
++                }
++            }
++        }
+     }
+     
+     /**
+"
+"17","junit.framework.AssertionFailedError","/source/org/jfree/chart/plot/PiePlot.java","@@ -1375,6 +1375,9 @@ public void setExplodePercent(Comparable key, double percent) {
+      * @return The percent.
+      */
+     public double getMaximumExplodePercent() {
+         double result = 0.0;
+         Iterator iterator = this.dataset.getKeys().iterator();
+         while (iterator.hasNext()) {
+@@ -2048,8 +2051,10 @@ public PiePlotState initialise(Graphics2D g2, Rectangle2D plotArea,
+      
+         PiePlotState state = new PiePlotState(info);
+         state.setPassesRequired(2);
+             state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
+                     plot.getDataset()));
+         state.setLatestAngle(plot.getStartAngle());
+         return state;
+         
+","@@ -1375,6 +1375,9 @@ public void setExplodePercent(Comparable key, double percent) {
+      * @return The percent.
+      */
+     public double getMaximumExplodePercent() {
++        if (this.dataset == null) {
++            return 0.0;
++        }
+         double result = 0.0;
+         Iterator iterator = this.dataset.getKeys().iterator();
+         while (iterator.hasNext()) {
+@@ -2048,8 +2051,10 @@ public PiePlotState initialise(Graphics2D g2, Rectangle2D plotArea,
+      
+         PiePlotState state = new PiePlotState(info);
+         state.setPassesRequired(2);
++        if (this.dataset != null) {
+             state.setTotal(DatasetUtilities.calculatePieDatasetTotal(
+                     plot.getDataset()));
++        }
+         state.setLatestAngle(plot.getStartAngle());
+         return state;
+         
+"
+"18","java.lang.NullPointerException","/source/org/jfree/data/category/DefaultIntervalCategoryDataset.java","@@ -204,8 +204,8 @@ public DefaultIntervalCategoryDataset(Comparable[] seriesKeys,
+ 
+             }
+             else {
+-                this.seriesKeys = null;
+-                this.categoryKeys = null;
+             }
+         }
+ 
+@@ -335,7 +335,7 @@ public void setCategoryKeys(Comparable[] categoryKeys) {
+         if (categoryKeys == null) {
+             throw new IllegalArgumentException(""Null 'categoryKeys' argument."");
+         }
+-        if (categoryKeys.length != this.startData[0].length) {
+             throw new IllegalArgumentException(
+                     ""The number of categories does not match the data."");
+         }
+","@@ -204,8 +204,8 @@ public DefaultIntervalCategoryDataset(Comparable[] seriesKeys,
+ 
+             }
+             else {
++                this.seriesKeys = new Comparable[0];
++                this.categoryKeys = new Comparable[0];
+             }
+         }
+ 
+@@ -335,7 +335,7 @@ public void setCategoryKeys(Comparable[] categoryKeys) {
+         if (categoryKeys == null) {
+             throw new IllegalArgumentException(""Null 'categoryKeys' argument."");
+         }
++        if (categoryKeys.length != getCategoryCount()) {
+             throw new IllegalArgumentException(
+                     ""The number of categories does not match the data."");
+         }
+"
+"19","java.lang.IllegalArgumentException","/source/org/jfree/data/time/TimeSeries.java","@@ -854,7 +854,8 @@ public void delete(int start, int end) {
+      *         subclasses may differ.
+      */
+     public Object clone() throws CloneNotSupportedException {
+-        Object clone = createCopy(0, getItemCount() - 1);
+         return clone;
+     }
+ 
+","@@ -854,7 +854,8 @@ public void delete(int start, int end) {
+      *         subclasses may differ.
+      */
+     public Object clone() throws CloneNotSupportedException {
++        TimeSeries clone = (TimeSeries) super.clone();
++        clone.data = (List) ObjectUtilities.deepClone(this.data);
+         return clone;
+     }
+ 
+"
+"20","junit.framework.AssertionFailedError","/source/org/jfree/chart/plot/ValueMarker.java","@@ -92,7 +92,7 @@ public ValueMarker(double value, Paint paint, Stroke stroke) {
+      */
+     public ValueMarker(double value, Paint paint, Stroke stroke, 
+                        Paint outlinePaint, Stroke outlineStroke, float alpha) {
+-        super(paint, stroke, paint, stroke, alpha);
+         this.value = value;
+     }
+     
+","@@ -92,7 +92,7 @@ public ValueMarker(double value, Paint paint, Stroke stroke) {
+      */
+     public ValueMarker(double value, Paint paint, Stroke stroke, 
+                        Paint outlinePaint, Stroke outlineStroke, float alpha) {
++        super(paint, stroke, outlinePaint, outlineStroke, alpha);
+         this.value = value;
+     }
+     
+"
+"21","junit.framework.AssertionFailedError","/source/org/jfree/chart/plot/CategoryPlot.java","@@ -695,6 +695,9 @@ public void setDomainAxes(CategoryAxis[] axes) {
+      * @since 1.0.3
+      */
+     public int getDomainAxisIndex(CategoryAxis axis) {
+         return this.domainAxes.indexOf(axis);
+     }
+     
+@@ -970,6 +973,9 @@ public void setRangeAxes(ValueAxis[] axes) {
+      * @since 1.0.7
+      */
+     public int getRangeAxisIndex(ValueAxis axis) {
+         int result = this.rangeAxes.indexOf(axis);
+         if (result < 0) { // try the parent plot
+             Plot parent = getParent();
+","@@ -695,6 +695,9 @@ public void setDomainAxes(CategoryAxis[] axes) {
+      * @since 1.0.3
+      */
+     public int getDomainAxisIndex(CategoryAxis axis) {
++        if (axis == null) {
++            throw new IllegalArgumentException(""Null 'axis' argument."");
++        }
+         return this.domainAxes.indexOf(axis);
+     }
+     
+@@ -970,6 +973,9 @@ public void setRangeAxes(ValueAxis[] axes) {
+      * @since 1.0.7
+      */
+     public int getRangeAxisIndex(ValueAxis axis) {
++        if (axis == null) {
++            throw new IllegalArgumentException(""Null 'axis' argument."");
++        }
+         int result = this.rangeAxes.indexOf(axis);
+         if (result < 0) { // try the parent plot
+             Plot parent = getParent();
+"
+"22","org.jfree.data.UnknownKeyException","/source/org/jfree/data/KeyedObjects2D.java","@@ -228,9 +228,10 @@ public Object getObject(Comparable rowKey, Comparable columnKey) {
+             throw new UnknownKeyException(""Column key ("" + columnKey 
+                     + "") not recognised."");
+         }
+-        if (row >= 0) {
+         KeyedObjects rowData = (KeyedObjects) this.rows.get(row);
+-            return rowData.getObject(columnKey);
+         }
+         else {
+             return null;
+@@ -315,8 +316,29 @@ public void removeObject(Comparable rowKey, Comparable columnKey) {
+         }
+         
+         // 2. check whether the column is now empty.
+     }
+ 
+     /**
+@@ -342,6 +364,10 @@ public void removeRow(int rowIndex) {
+      */
+     public void removeRow(Comparable rowKey) {
+         int index = getRowIndex(rowKey);
+         removeRow(index);
+     }
+ 
+@@ -375,7 +401,10 @@ public void removeColumn(Comparable columnKey) {
+         Iterator iterator = this.rows.iterator();
+         while (iterator.hasNext()) {
+             KeyedObjects rowData = (KeyedObjects) iterator.next();
+-                rowData.removeValue(columnKey);
+         }
+         this.columnKeys.remove(columnKey);
+     }
+","@@ -228,9 +228,10 @@ public Object getObject(Comparable rowKey, Comparable columnKey) {
+             throw new UnknownKeyException(""Column key ("" + columnKey 
+                     + "") not recognised."");
+         }
+         KeyedObjects rowData = (KeyedObjects) this.rows.get(row);
++        int index = rowData.getIndex(columnKey);
++        if (index >= 0) {
++            return rowData.getObject(index);
+         }
+         else {
+             return null;
+@@ -315,8 +316,29 @@ public void removeObject(Comparable rowKey, Comparable columnKey) {
+         }
+         
+         // 2. check whether the column is now empty.
++        allNull = true;
+         
++        for (int item = 0, itemCount = this.rows.size(); item < itemCount; 
++             item++) {
++            row = (KeyedObjects) this.rows.get(item);
++            int columnIndex = row.getIndex(columnKey);
++            if (columnIndex >= 0 && row.getObject(columnIndex) != null) {
++                allNull = false;
++                break;
++            }
++        }
+         
++        if (allNull) {
++            for (int item = 0, itemCount = this.rows.size(); item < itemCount; 
++                 item++) {
++                row = (KeyedObjects) this.rows.get(item);
++                int columnIndex = row.getIndex(columnKey);
++                if (columnIndex >= 0) {
++                    row.removeValue(columnIndex);
++                }
++            }
++            this.columnKeys.remove(columnKey);
++        }
+     }
+ 
+     /**
+@@ -342,6 +364,10 @@ public void removeRow(int rowIndex) {
+      */
+     public void removeRow(Comparable rowKey) {
+         int index = getRowIndex(rowKey);
++        if (index < 0) {
++            throw new UnknownKeyException(""Row key ("" + rowKey 
++                    + "") not recognised."");
++        }
+         removeRow(index);
+     }
+ 
+@@ -375,7 +401,10 @@ public void removeColumn(Comparable columnKey) {
+         Iterator iterator = this.rows.iterator();
+         while (iterator.hasNext()) {
+             KeyedObjects rowData = (KeyedObjects) iterator.next();
++            int i = rowData.getIndex(columnKey);
++            if (i >= 0) {
++                rowData.removeValue(i);
++            }
+         }
+         this.columnKeys.remove(columnKey);
+     }
+"
+"23","junit.framework.AssertionFailedError","/source/org/jfree/chart/axis/Axis.java","@@ -1189,11 +1189,13 @@ else if (edge == RectangleEdge.RIGHT) {
+         }
+         if (plotState != null && hotspot != null) {
+             ChartRenderingInfo owner = plotState.getOwner();
+                 EntityCollection entities = owner.getEntityCollection();
+                 if (entities != null) {
+                     entities.add(new AxisLabelEntity(this, hotspot, 
+                             this.labelToolTip, this.labelURL));
+                 }
+         }
+         return state;
+ 
+","@@ -1189,11 +1189,13 @@ else if (edge == RectangleEdge.RIGHT) {
+         }
+         if (plotState != null && hotspot != null) {
+             ChartRenderingInfo owner = plotState.getOwner();
++            if (owner != null) {
+                 EntityCollection entities = owner.getEntityCollection();
+                 if (entities != null) {
+                     entities.add(new AxisLabelEntity(this, hotspot, 
+                             this.labelToolTip, this.labelURL));
+                 }
++            }
+         }
+         return state;
+ 
+"
+"24","junit.framework.AssertionFailedError","/source/org/jfree/chart/renderer/category/StatisticalBarRenderer.java","@@ -256,6 +256,9 @@ protected void drawHorizontalItem(Graphics2D g2,
+ 
+         // BAR X
+         Number meanValue = dataset.getMeanValue(row, column);
+ 
+         double value = meanValue.doubleValue();
+         double base = 0.0;
+@@ -312,7 +315,9 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+         }
+ 
+         // standard deviation lines
+-            double valueDelta = dataset.getStdDevValue(row, column).doubleValue();
+             double highVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+                     + valueDelta, dataArea, yAxisLocation);
+             double lowVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+@@ -341,6 +346,7 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+             line = new Line2D.Double(lowVal, rectY + rectHeight * 0.25, 
+                                      lowVal, rectY + rectHeight * 0.75);
+             g2.draw(line);
+         
+         CategoryItemLabelGenerator generator = getItemLabelGenerator(row, 
+                 column);
+@@ -400,6 +406,9 @@ protected void drawVerticalItem(Graphics2D g2,
+ 
+         // BAR Y
+         Number meanValue = dataset.getMeanValue(row, column);
+ 
+         double value = meanValue.doubleValue();
+         double base = 0.0;
+@@ -456,7 +465,9 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+         }
+ 
+         // standard deviation lines
+-            double valueDelta = dataset.getStdDevValue(row, column).doubleValue();
+             double highVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+                     + valueDelta, dataArea, yAxisLocation);
+             double lowVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+@@ -484,6 +495,7 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+             line = new Line2D.Double(rectX + rectWidth / 2.0d - 5.0d, lowVal,
+                                      rectX + rectWidth / 2.0d + 5.0d, lowVal);
+             g2.draw(line);
+         
+         CategoryItemLabelGenerator generator = getItemLabelGenerator(row, 
+                 column);
+","@@ -256,6 +256,9 @@ protected void drawHorizontalItem(Graphics2D g2,
+ 
+         // BAR X
+         Number meanValue = dataset.getMeanValue(row, column);
++        if (meanValue == null) {
++            return;
++        }
+ 
+         double value = meanValue.doubleValue();
+         double base = 0.0;
+@@ -312,7 +315,9 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+         }
+ 
+         // standard deviation lines
++        Number n = dataset.getStdDevValue(row, column);
++        if (n != null) {
++            double valueDelta = n.doubleValue();
+             double highVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+                     + valueDelta, dataArea, yAxisLocation);
+             double lowVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+@@ -341,6 +346,7 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+             line = new Line2D.Double(lowVal, rectY + rectHeight * 0.25, 
+                                      lowVal, rectY + rectHeight * 0.75);
+             g2.draw(line);
++        }
+         
+         CategoryItemLabelGenerator generator = getItemLabelGenerator(row, 
+                 column);
+@@ -400,6 +406,9 @@ protected void drawVerticalItem(Graphics2D g2,
+ 
+         // BAR Y
+         Number meanValue = dataset.getMeanValue(row, column);
++        if (meanValue == null) {
++            return;
++        }
+ 
+         double value = meanValue.doubleValue();
+         double base = 0.0;
+@@ -456,7 +465,9 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+         }
+ 
+         // standard deviation lines
++        Number n = dataset.getStdDevValue(row, column);
++        if (n != null) {
++            double valueDelta = n.doubleValue();
+             double highVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+                     + valueDelta, dataArea, yAxisLocation);
+             double lowVal = rangeAxis.valueToJava2D(meanValue.doubleValue() 
+@@ -484,6 +495,7 @@ else if (lclip <= 0.0) { // cases 5, 6, 7 and 8
+             line = new Line2D.Double(rectX + rectWidth / 2.0d - 5.0d, lowVal,
+                                      rectX + rectWidth / 2.0d + 5.0d, lowVal);
+             g2.draw(line);
++        }
+         
+         CategoryItemLabelGenerator generator = getItemLabelGenerator(row, 
+                 column);
+"
+"25","junit.framework.AssertionFailedError","/source/org/jfree/chart/renderer/category/MinMaxCategoryRenderer.java","@@ -432,6 +432,25 @@ public void drawItem(Graphics2D g2, CategoryItemRendererState state,
+      *
+      * @since 1.0.7
+      */
+ 
+     /**
+      * Returns an icon.
+","@@ -432,6 +432,25 @@ public void drawItem(Graphics2D g2, CategoryItemRendererState state,
+      *
+      * @since 1.0.7
+      */
++    public boolean equals(Object obj) {
++        if (obj == this) {
++            return true;
++        }
++        if (!(obj instanceof MinMaxCategoryRenderer)) {
++            return false;
++        }
++        MinMaxCategoryRenderer that = (MinMaxCategoryRenderer) obj;
++        if (this.plotLines != that.plotLines) {
++            return false;
++        }
++        if (!PaintUtilities.equal(this.groupPaint, that.groupPaint)) {
++            return false;
++        }
++        if (!this.groupStroke.equals(that.groupStroke)) {
++            return false;
++        }
++        return super.equals(obj);
++    }
+ 
+     /**
+      * Returns an icon.
+"
+"26","java.lang.IllegalArgumentException","/source/org/jfree/chart/renderer/GrayPaintScale.java","@@ -123,7 +123,7 @@ public double getUpperBound() {
+     public Paint getPaint(double value) {
+         double v = Math.max(value, this.lowerBound);
+         v = Math.min(v, this.upperBound);
+-        int g = (int) ((value - this.lowerBound) / (this.upperBound 
+                 - this.lowerBound) * 255.0);
+         return new Color(g, g, g);
+     }
+","@@ -123,7 +123,7 @@ public double getUpperBound() {
+     public Paint getPaint(double value) {
+         double v = Math.max(value, this.lowerBound);
+         v = Math.min(v, this.upperBound);
++        int g = (int) ((v - this.lowerBound) / (this.upperBound 
+                 - this.lowerBound) * 255.0);
+         return new Color(g, g, g);
+     }
+"
+"27","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java","@@ -152,7 +152,7 @@ public void enterScope(NodeTraversal t) {
+     reachingUses = new MaybeReachingVariableUse(cfg, t.getScope(), compiler);
+     reachingUses.analyze();
+     for (Candidate c : candidates) {
+-      if (c.canInline()) {
+         c.inlineVariable();
+ 
+         // If definition c has dependencies, then inlining it may have
+@@ -277,7 +277,7 @@ private Node getDefCfgNode() {
+       return defMetadata.node;
+     }
+ 
+-    private boolean canInline() {
+       // Cannot inline a parameter.
+       if (getDefCfgNode().isFunction()) {
+         return false;
+@@ -372,6 +372,12 @@ public boolean apply(Node input) {
+                   case Token.REGEXP:
+                   case Token.NEW:
+                     return true;
+                 }
+                 return false;
+               }
+","@@ -152,7 +152,7 @@ public void enterScope(NodeTraversal t) {
+     reachingUses = new MaybeReachingVariableUse(cfg, t.getScope(), compiler);
+     reachingUses.analyze();
+     for (Candidate c : candidates) {
++      if (c.canInline(t.getScope())) {
+         c.inlineVariable();
+ 
+         // If definition c has dependencies, then inlining it may have
+@@ -277,7 +277,7 @@ private Node getDefCfgNode() {
+       return defMetadata.node;
+     }
+ 
++    private boolean canInline(final Scope scope) {
+       // Cannot inline a parameter.
+       if (getDefCfgNode().isFunction()) {
+         return false;
+@@ -372,6 +372,12 @@ public boolean apply(Node input) {
+                   case Token.REGEXP:
+                   case Token.NEW:
+                     return true;
++                  case Token.NAME:
++                    Var var = scope.getOwnSlot(input.getString());
++                    if (var != null
++                        && var.getParentNode().isCatch()) {
++                      return true;
++                    }
+                 }
+                 return false;
+               }
+"
+"28","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java","@@ -610,9 +610,13 @@ public JSType caseNumberType() {
+     public JSType caseObjectType(ObjectType type) {
+       if (value.equals(""function"")) {
+         JSType ctorType = getNativeType(U2U_CONSTRUCTOR_TYPE);
+-        return resultEqualsValue && ctorType.isSubtype(type) ? ctorType : null;
+           // Objects are restricted to ""Function"", subtypes are left
+           // Only filter out subtypes of ""function""
+       }
+       return matchesExpectation(""object"") ? type : null;
+     }
+","@@ -610,9 +610,13 @@ public JSType caseNumberType() {
+     public JSType caseObjectType(ObjectType type) {
+       if (value.equals(""function"")) {
+         JSType ctorType = getNativeType(U2U_CONSTRUCTOR_TYPE);
++        if (resultEqualsValue) {
+           // Objects are restricted to ""Function"", subtypes are left
++          return ctorType.getGreatestSubtype(type);
++        } else {
+           // Only filter out subtypes of ""function""
++          return type.isSubtype(ctorType) ? null : type;
++        }
+       }
+       return matchesExpectation(""object"") ? type : null;
+     }
+"
+"29","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/InlineObjectLiterals.java","@@ -173,6 +173,9 @@ private boolean isInlinableObject(List<Reference> refs) {
+ 
+           // Deleting a property has different semantics from deleting
+           // a variable, so deleted properties should not be inlined.
+ 
+           // NOTE(nicksantos): This pass's object-splitting algorithm has
+           // a blind spot. It assumes that if a property isn't defined on an
+","@@ -173,6 +173,9 @@ private boolean isInlinableObject(List<Reference> refs) {
+ 
+           // Deleting a property has different semantics from deleting
+           // a variable, so deleted properties should not be inlined.
++          if (gramps.isDelProp()) {
++            return false;
++          }
+ 
+           // NOTE(nicksantos): This pass's object-splitting algorithm has
+           // a blind spot. It assumes that if a property isn't defined on an
+"
+"30","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/TypeValidator.java","@@ -363,9 +363,6 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+       JSType leftType, Node owner, String propName) {
+     // The NoType check is a hack to make typedefs work OK.
+     if (!leftType.isNoType() && !rightType.canAssignTo(leftType)) {
+-      if ((leftType.isConstructor() || leftType.isEnumType()) && (rightType.isConstructor() || rightType.isEnumType())) {
+-        registerMismatch(rightType, leftType, null);
+-      } else {
+       // Do not type-check interface methods, because we expect that
+       // they will have dummy implementations that do not match the type
+       // annotations.
+@@ -382,7 +379,6 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+           ""assignment to property "" + propName + "" of "" +
+           getReadableJSTypeName(owner, true),
+           rightType, leftType);
+-      }
+       return false;
+     }
+     return true;
+@@ -402,11 +398,7 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+   boolean expectCanAssignTo(NodeTraversal t, Node n, JSType rightType,
+       JSType leftType, String msg) {
+     if (!rightType.canAssignTo(leftType)) {
+-      if ((leftType.isConstructor() || leftType.isEnumType()) && (rightType.isConstructor() || rightType.isEnumType())) {
+-        registerMismatch(rightType, leftType, null);
+-      } else {
+       mismatch(t, n, msg, rightType, leftType);
+-      }
+       return false;
+     }
+     return true;
+","@@ -363,9 +363,6 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+       JSType leftType, Node owner, String propName) {
+     // The NoType check is a hack to make typedefs work OK.
+     if (!leftType.isNoType() && !rightType.canAssignTo(leftType)) {
+       // Do not type-check interface methods, because we expect that
+       // they will have dummy implementations that do not match the type
+       // annotations.
+@@ -382,7 +379,6 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+           ""assignment to property "" + propName + "" of "" +
+           getReadableJSTypeName(owner, true),
+           rightType, leftType);
+       return false;
+     }
+     return true;
+@@ -402,11 +398,7 @@ boolean expectCanAssignToPropertyOf(NodeTraversal t, Node n, JSType rightType,
+   boolean expectCanAssignTo(NodeTraversal t, Node n, JSType rightType,
+       JSType leftType, String msg) {
+     if (!rightType.canAssignTo(leftType)) {
+       mismatch(t, n, msg, rightType, leftType);
+       return false;
+     }
+     return true;
+"
+"31","java.lang.NullPointerException","/src/com/google/javascript/jscomp/TypeCheck.java","@@ -1569,9 +1569,13 @@ private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
+       ObjectType interfaceType) {
+     ObjectType implicitProto = interfaceType.getImplicitPrototype();
+     Set<String> currentPropertyNames;
+       // This can be the case if interfaceType is proxy to a non-existent
+       // object (which is a bad type annotation, but shouldn't crash).
+       currentPropertyNames = implicitProto.getOwnPropertyNames();
+     for (String name : currentPropertyNames) {
+       ObjectType oType = properties.get(name);
+       if (oType != null) {
+","@@ -1569,9 +1569,13 @@ private void checkInterfaceConflictProperties(NodeTraversal t, Node n,
+       ObjectType interfaceType) {
+     ObjectType implicitProto = interfaceType.getImplicitPrototype();
+     Set<String> currentPropertyNames;
++    if (implicitProto == null) {
+       // This can be the case if interfaceType is proxy to a non-existent
+       // object (which is a bad type annotation, but shouldn't crash).
++      currentPropertyNames = ImmutableSet.of();
++    } else {
+       currentPropertyNames = implicitProto.getOwnPropertyNames();
++    }
+     for (String name : currentPropertyNames) {
+       ObjectType oType = properties.get(name);
+       if (oType != null) {
+"
+"32","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/RemoveUnusedVars.java","@@ -376,6 +376,9 @@ private void removeUnreferencedFunctionArgs(Scope fnScope) {
+     // is removing globals, then it's OK to remove unused function args.
+     //
+     // See http://code.google.com/p/closure-compiler/issues/detail?id=253
+ 
+     Node function = fnScope.getRootNode();
+ 
+","@@ -376,6 +376,9 @@ private void removeUnreferencedFunctionArgs(Scope fnScope) {
+     // is removing globals, then it's OK to remove unused function args.
+     //
+     // See http://code.google.com/p/closure-compiler/issues/detail?id=253
++    if (!removeGlobals) {
++      return;
++    }
+ 
+     Node function = fnScope.getRootNode();
+ 
+"
+"33","junit.framework.AssertionFailedError","/src/com/google/javascript/rhino/jstype/NamedType.java","@@ -187,7 +187,7 @@ JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     // makes more sense. Now, resolution via registry is first in order to
+     // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+ 
+@@ -199,7 +199,7 @@ JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     }
+ 
+     resolveViaProperties(t, enclosing);
+-    if (detectImplicitPrototypeCycle()) {
+       handleTypeCycle(t);
+     }
+ 
+","@@ -187,7 +187,7 @@ JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     // makes more sense. Now, resolution via registry is first in order to
+     // avoid triggering the warnings built into the resolution via properties.
+     boolean resolved = resolveViaRegistry(t, enclosing);
++    if (detectInheritanceCycle()) {
+       handleTypeCycle(t);
+     }
+ 
+@@ -199,7 +199,7 @@ JSType resolveInternal(ErrorReporter t, StaticScope<JSType> enclosing) {
+     }
+ 
+     resolveViaProperties(t, enclosing);
++    if (detectInheritanceCycle()) {
+       handleTypeCycle(t);
+     }
+ 
+"
+"34","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/CollapseVariableDeclarations.java","@@ -201,10 +201,14 @@ private boolean canBeRedeclared(Node n, Scope s) {
+       Var var = s.getVar(lhs.getString());
+       return var != null
+           && var.getScope() == s
+           && !blacklistedVars.contains(var);
+     }
+   }
+ 
+ 
+   private void applyCollapses() {
+     for (Collapse collapse : collapses) {
+","@@ -201,10 +201,14 @@ private boolean canBeRedeclared(Node n, Scope s) {
+       Var var = s.getVar(lhs.getString());
+       return var != null
+           && var.getScope() == s
++          && !isNamedParameter(var)
+           && !blacklistedVars.contains(var);
+     }
+   }
+ 
++  private boolean isNamedParameter(Var v) {
++    return v.getParentNode().isParamList();
++  }
+ 
+   private void applyCollapses() {
+     for (Collapse collapse : collapses) {
+"
+"35","junit.framework.ComparisonFailure","/src/com/google/javascript/jscomp/ProcessCommonJSModules.java","@@ -116,6 +116,7 @@ public static String toModuleName(String requiredFilename,
+   private String normalizeSourceName(String filename) {
+     // The DOS command shell will normalize ""/"" to ""\"", so we have to
+     // wrestle it back.
+ 
+     if (filename.indexOf(filenamePrefix) == 0) {
+       filename = filename.substring(filenamePrefix.length());
+@@ -180,7 +181,7 @@ private void visitScript(NodeTraversal t, Node script) {
+       Preconditions.checkArgument(scriptNodeCount == 1,
+           ""ProcessCommonJSModules supports only one invocation per "" +
+           ""CompilerInput / script node"");
+-      String moduleName = guessCJSModuleName(normalizeSourceName(script.getSourceFileName()));
+       script.addChildToFront(IR.var(IR.name(moduleName), IR.objectlit())
+           .copyInformationFromForTree(script));
+       if (reportDependencies) {
+","@@ -116,6 +116,7 @@ public static String toModuleName(String requiredFilename,
+   private String normalizeSourceName(String filename) {
+     // The DOS command shell will normalize ""/"" to ""\"", so we have to
+     // wrestle it back.
++    filename = filename.replace(""\\"", ""/"");
+ 
+     if (filename.indexOf(filenamePrefix) == 0) {
+       filename = filename.substring(filenamePrefix.length());
+@@ -180,7 +181,7 @@ private void visitScript(NodeTraversal t, Node script) {
+       Preconditions.checkArgument(scriptNodeCount == 1,
+           ""ProcessCommonJSModules supports only one invocation per "" +
+           ""CompilerInput / script node"");
++      String moduleName = guessCJSModuleName(script.getSourceFileName());
+       script.addChildToFront(IR.var(IR.name(moduleName), IR.objectlit())
+           .copyInformationFromForTree(script));
+       if (reportDependencies) {
+"
+"36","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/TypeCheck.java","@@ -1311,8 +1311,6 @@ private void visitGetProp(NodeTraversal t, Node n, Node parent) {
+ 
+     if (childType.isDict()) {
+       report(t, property, TypeValidator.ILLEGAL_PROPERTY_ACCESS, ""'.'"", ""dict"");
+-    } else if (n.getJSType() != null && parent.isAssign()) {
+-      return;
+     } else if (validator.expectNotNullOrUndefined(t, n, childType,
+         ""No properties on this expression"", getNativeType(OBJECT_TYPE))) {
+       checkPropertyAccess(childType, property.getString(), t, n);
+","@@ -1311,8 +1311,6 @@ private void visitGetProp(NodeTraversal t, Node n, Node parent) {
+ 
+     if (childType.isDict()) {
+       report(t, property, TypeValidator.ILLEGAL_PROPERTY_ACCESS, ""'.'"", ""dict"");
+     } else if (validator.expectNotNullOrUndefined(t, n, childType,
+         ""No properties on this expression"", getNativeType(OBJECT_TYPE))) {
+       checkPropertyAccess(childType, property.getString(), t, n);
+"
+"37","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/MaybeReachingVariableUse.java","@@ -157,6 +157,12 @@ ReachingUses flowThrough(Node n, ReachingUses input) {
+   }
+ 
+   private boolean hasExceptionHandler(Node cfgNode) {
+    return false;
+   }
+ 
+","@@ -157,6 +157,12 @@ ReachingUses flowThrough(Node n, ReachingUses input) {
+   }
+ 
+   private boolean hasExceptionHandler(Node cfgNode) {
++    List<DiGraphEdge<Node, Branch>> branchEdges = getCfg().getOutEdges(cfgNode);
++    for (DiGraphEdge<Node, Branch> edge : branchEdges) {
++      if (edge.getValue() == Branch.ON_EX) {
++        return true;
++      }
++    }
+     return false;
+   }
+ 
+"
+"38","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/NodeUtil.java","@@ -1414,7 +1414,7 @@ static boolean mayBeString(Node n) {
+ 
+   static boolean mayBeString(Node n, boolean recurse) {
+     if (recurse) {
+-      return allResultsMatch(n, MAY_BE_STRING_PREDICATE);
+     } else {
+       return mayBeStringHelper(n);
+     }
+","@@ -1414,7 +1414,7 @@ static boolean mayBeString(Node n) {
+ 
+   static boolean mayBeString(Node n, boolean recurse) {
+     if (recurse) {
++      return anyResultsMatch(n, MAY_BE_STRING_PREDICATE);
+     } else {
+       return mayBeStringHelper(n);
+     }
+"
+"39","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/ControlFlowAnalysis.java","@@ -764,7 +764,7 @@ private static Node computeFollowNode(
+         } else if (parent.getLastChild() == node){
+           if (cfa != null) {
+             for (Node finallyNode : cfa.finallyMap.get(parent)) {
+-              cfa.createEdge(fromNode, Branch.UNCOND, finallyNode);
+             }
+           }
+           return computeFollowNode(fromNode, parent, cfa);
+","@@ -764,7 +764,7 @@ private static Node computeFollowNode(
+         } else if (parent.getLastChild() == node){
+           if (cfa != null) {
+             for (Node finallyNode : cfa.finallyMap.get(parent)) {
++              cfa.createEdge(fromNode, Branch.ON_EX, finallyNode);
+             }
+           }
+           return computeFollowNode(fromNode, parent, cfa);
+"
+"40","junit.framework.ComparisonFailure","/src/com/google/javascript/jscomp/TypedScopeCreator.java","@@ -1288,8 +1288,12 @@ private JSType getDeclaredType(String sourceName, JSDocInfo info,
+           if (info.isConstant()) {
+             JSType knownType = null;
+             if (rValue != null) {
+-              if (rValue.getJSType() != null && !rValue.getJSType().isUnknownType()) {
+                 // If rValue has a type-cast, we use the type in the type-cast.
+                 // If rValue's type was already computed during scope creation,
+                 // then we can safely use that.
+                 return rValue.getJSType();
+","@@ -1288,8 +1288,12 @@ private JSType getDeclaredType(String sourceName, JSDocInfo info,
+           if (info.isConstant()) {
+             JSType knownType = null;
+             if (rValue != null) {
++              JSDocInfo rValueInfo = rValue.getJSDocInfo();
++              if (rValueInfo != null && rValueInfo.hasType()) {
+                 // If rValue has a type-cast, we use the type in the type-cast.
++                return rValueInfo.getType().evaluate(scope, typeRegistry);
++              } else if (rValue.getJSType() != null
++                  && !rValue.getJSType().isUnknownType()) {
+                 // If rValue's type was already computed during scope creation,
+                 // then we can safely use that.
+                 return rValue.getJSType();
+"
+"41","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/PeepholeOptimizationsPass.java","@@ -123,8 +123,8 @@ private void traverse(Node node) {
+     do {
+       Node c = node.getFirstChild();
+       while(c != null) {
+-        traverse(c);
+         Node next = c.getNext();
+         c = next;
+       }
+ 
+","@@ -123,8 +123,8 @@ private void traverse(Node node) {
+     do {
+       Node c = node.getFirstChild();
+       while(c != null) {
+         Node next = c.getNext();
++        traverse(c);
+         c = next;
+       }
+ 
+"
+"42","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/CheckSideEffects.java","@@ -98,7 +98,7 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+     // Do not try to remove a block or an expr result. We already handle
+     // these cases when we visit the child, and the peephole passes will
+     // fix up the tree in more clever ways when these are removed.
+-    if (n.isExprResult()) {
+       return;
+     }
+ 
+@@ -110,24 +110,7 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+ 
+     boolean isResultUsed = NodeUtil.isExpressionResultUsed(n);
+     boolean isSimpleOp = NodeUtil.isSimpleOperatorType(n.getType());
+-    if (parent.getType() == Token.COMMA) {
+-      if (isResultUsed) {
+-        return;
+-      }
+-      if (n == parent.getLastChild()) {
+-        for (Node an : parent.getAncestors()) {
+-          int ancestorType = an.getType();
+-          if (ancestorType == Token.COMMA) continue;
+-          if (ancestorType != Token.EXPR_RESULT && ancestorType != Token.BLOCK) return;
+-          else break;
+-        }
+-      }
+-    } else if (parent.getType() != Token.EXPR_RESULT && parent.getType() != Token.BLOCK) {
+-      if (! (parent.getType() == Token.FOR && parent.getChildCount() == 4 && (n == parent.getFirstChild() || n == parent.getFirstChild().getNext().getNext()))) {
+-        return;
+-      }
+-    }
+-    if (
++    if (!isResultUsed &&
+         (isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {
+       String msg = ""This code lacks side-effects. Is there a bug?"";
+       if (n.isString()) {
+","@@ -98,7 +98,7 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+     // Do not try to remove a block or an expr result. We already handle
+     // these cases when we visit the child, and the peephole passes will
+     // fix up the tree in more clever ways when these are removed.
++    if (n.isExprResult() || n.isBlock()) {
+       return;
+     }
+ 
+@@ -110,24 +110,7 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+ 
+     boolean isResultUsed = NodeUtil.isExpressionResultUsed(n);
+     boolean isSimpleOp = NodeUtil.isSimpleOperatorType(n.getType());
++    if (!isResultUsed &&
+         (isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {
+       String msg = ""This code lacks side-effects. Is there a bug?"";
+       if (n.isString()) {
+"
+"43","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java","@@ -99,6 +99,9 @@ public boolean apply(Node n) {
+           return true;
+         }
+ 
+         for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+           if (!ControlFlowGraph.isEnteringNewCfgNode(c) && apply(c)) {
+","@@ -99,6 +99,9 @@ public boolean apply(Node n) {
+           return true;
+         }
+ 
++        if (n.isDelProp()) {
++          return true;
++        }
+ 
+         for (Node c = n.getFirstChild(); c != null; c = c.getNext()) {
+           if (!ControlFlowGraph.isEnteringNewCfgNode(c) && apply(c)) {
+"
+"44","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/ScopedAliases.java","@@ -167,17 +167,23 @@ public void applyAlias() {
+ 
+   private class AliasedTypeNode implements AliasUsage {
+     private final Node typeReference;
+     private final String aliasName;
+ 
+-    AliasedTypeNode(Node typeReference,
+         String aliasName) {
+       this.typeReference = typeReference;
+       this.aliasName = aliasName;
+     }
+ 
+     @Override
+     public void applyAlias() {
+-      typeReference.setString(aliasName);
+     }
+   }
+ 
+@@ -465,7 +471,7 @@ private void fixTypeNode(Node typeNode) {
+         Var aliasVar = aliases.get(baseName);
+         if (aliasVar != null) {
+           Node aliasedNode = aliasVar.getInitialValue();
+-          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode.getQualifiedName() + name.substring(endIndex)));
+         }
+       }
+ 
+","@@ -167,17 +167,23 @@ public void applyAlias() {
+ 
+   private class AliasedTypeNode implements AliasUsage {
+     private final Node typeReference;
++    private final Node aliasDefinition;
+     private final String aliasName;
+ 
++    AliasedTypeNode(Node typeReference, Node aliasDefinition,
+         String aliasName) {
+       this.typeReference = typeReference;
++      this.aliasDefinition = aliasDefinition;
+       this.aliasName = aliasName;
+     }
+ 
+     @Override
+     public void applyAlias() {
++      String typeName = typeReference.getString();
++      String aliasExpanded =
++          Preconditions.checkNotNull(aliasDefinition.getQualifiedName());
++      Preconditions.checkState(typeName.startsWith(aliasName));
++      typeReference.setString(typeName.replaceFirst(aliasName, aliasExpanded));
+     }
+   }
+ 
+@@ -465,7 +471,7 @@ private void fixTypeNode(Node typeNode) {
+         Var aliasVar = aliases.get(baseName);
+         if (aliasVar != null) {
+           Node aliasedNode = aliasVar.getInitialValue();
++          aliasUsages.add(new AliasedTypeNode(typeNode, aliasedNode, baseName));
+         }
+       }
+ 
+"
+"45","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/Compiler.java","@@ -1285,7 +1285,7 @@ Node parseInputs() {
+ 
+       // Check if the sources need to be re-ordered.
+       boolean staleInputs = false;
+-      if (options.dependencyOptions.needsManagement() && options.closurePass) {
+         for (CompilerInput input : inputs) {
+           // Forward-declare all the provided types, so that they
+           // are not flagged even if they are dropped from the process.
+","@@ -1285,7 +1285,7 @@ Node parseInputs() {
+ 
+       // Check if the sources need to be re-ordered.
+       boolean staleInputs = false;
++      if (options.dependencyOptions.needsManagement()) {
+         for (CompilerInput input : inputs) {
+           // Forward-declare all the provided types, so that they
+           // are not flagged even if they are dropped from the process.
+"
+"46","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java","@@ -217,7 +217,8 @@ private Node tryFoldSimpleFunctionCall(Node n) {
+       // slightly different semantics than '' + (a). See
+       // http://code.google.com/p/closure-compiler/issues/detail?id=759
+       Node value = callTarget.getNext();
+-      if (value != null) {
+         Node addition = IR.add(
+             IR.string("""").srcref(callTarget),
+             value.detachFromParent());
+","@@ -217,7 +217,8 @@ private Node tryFoldSimpleFunctionCall(Node n) {
+       // slightly different semantics than '' + (a). See
+       // http://code.google.com/p/closure-compiler/issues/detail?id=759
+       Node value = callTarget.getNext();
++      if (value != null && value.getNext() == null &&
++          NodeUtil.isImmutableValue(value)) {
+         Node addition = IR.add(
+             IR.string("""").srcref(callTarget),
+             value.detachFromParent());
+"
+"47","java.lang.IllegalArgumentException","/src/com/google/javascript/jscomp/type/ChainableReverseAbstractInterpreter.java","@@ -169,7 +169,9 @@ protected void declareNameInScope(FlowScope scope, Node node, JSType type) {
+         scope.inferQualifiedSlot(node, qualifiedName, origType, type);
+         break;
+ 
+         // ""this"" references aren't currently modeled in the CFG.
+ 
+       default:
+         throw new IllegalArgumentException(""Node cannot be refined. \n"" +
+","@@ -169,7 +169,9 @@ protected void declareNameInScope(FlowScope scope, Node node, JSType type) {
+         scope.inferQualifiedSlot(node, qualifiedName, origType, type);
+         break;
+ 
++      case Token.THIS:
+         // ""this"" references aren't currently modeled in the CFG.
++        break;
+ 
+       default:
+         throw new IllegalArgumentException(""Node cannot be refined. \n"" +
+"
+"48","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/PeepholeFoldConstants.java","@@ -1448,8 +1448,14 @@ private Node tryFoldArrayAccess(Node n, Node left, Node right) {
+ 
+     Node current = left.getFirstChild();
+     Node elem = null;
+-    for (int i = 0; current != null && i < intIndex; i++) {
+         elem = current;
+ 
+       current = current.getNext();
+     }
+","@@ -1448,8 +1448,14 @@ private Node tryFoldArrayAccess(Node n, Node left, Node right) {
+ 
+     Node current = left.getFirstChild();
+     Node elem = null;
++    for (int i = 0; current != null; i++) {
++      if (i != intIndex) {
++        if (mayHaveSideEffects(current)) {
++          return n;
++        }
++      } else {
+         elem = current;
++      }
+ 
+       current = current.getNext();
+     }
+"
+"49","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/ScopedAliases.java","@@ -275,8 +275,8 @@ private void findAliases(NodeTraversal t) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
+-        if (parent.isVar()) {
+-          if (n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+           String name = n.getString();
+           Var aliasVar = scope.getVar(name);
+           aliases.put(name, aliasVar);
+@@ -284,15 +284,16 @@ private void findAliases(NodeTraversal t) {
+           String qualifiedName =
+               aliasVar.getInitialValue().getQualifiedName();
+           transformation.addAlias(name, qualifiedName);
+           // Bleeding functions already get a BAD_PARAMETERS error, so just
+           // do nothing.
+           // Parameters of the scope function also get a BAD_PARAMETERS
+           // error.
+         } else {
+           // TODO(robbyw): Support using locals for private variables.
+           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+         }
+-        }
+       }
+     }
+ 
+","@@ -275,8 +275,8 @@ private void findAliases(NodeTraversal t) {
+         Node n = v.getNode();
+         int type = n.getType();
+         Node parent = n.getParent();
++        if (parent.isVar() &&
++            n.hasChildren() && n.getFirstChild().isQualifiedName()) {
+           String name = n.getString();
+           Var aliasVar = scope.getVar(name);
+           aliases.put(name, aliasVar);
+@@ -284,15 +284,16 @@ private void findAliases(NodeTraversal t) {
+           String qualifiedName =
+               aliasVar.getInitialValue().getQualifiedName();
+           transformation.addAlias(name, qualifiedName);
++        } else if (v.isBleedingFunction()) {
+           // Bleeding functions already get a BAD_PARAMETERS error, so just
+           // do nothing.
++        } else if (parent.getType() == Token.LP) {
+           // Parameters of the scope function also get a BAD_PARAMETERS
+           // error.
+         } else {
+           // TODO(robbyw): Support using locals for private variables.
+           report(t, n, GOOG_SCOPE_NON_ALIAS_LOCAL, n.getString());
+         }
+       }
+     }
+ 
+"
+"50","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/CheckSideEffects.java","@@ -98,44 +98,20 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+     // Do not try to remove a block or an expr result. We already handle
+     // these cases when we visit the child, and the peephole passes will
+     // fix up the tree in more clever ways when these are removed.
+-    if (parent.getType() == Token.COMMA) {
+-      Node gramps = parent.getParent();
+-      if (gramps.isCall() && parent == gramps.getFirstChild()) {
+-        if (n == parent.getFirstChild() && parent.getChildCount() == 2 && n.getNext().isName() && ""eval"".equals(n.getNext().getString())) {
+       return;
+-        }
+     }
+ 
+     // This no-op statement was there so that JSDoc information could
+     // be attached to the name. This check should not complain about it.
+-      if (n == parent.getLastChild()) {
+-        for (Node an : parent.getAncestors()) {
+-          int ancestorType = an.getType();
+-          if (ancestorType == Token.COMMA)
+-            continue;
+-          if (ancestorType != Token.EXPR_RESULT && ancestorType != Token.BLOCK)
+-            return;
+-          else
+-            break;
+-        }
+-      }
+-    } else if (parent.getType() != Token.EXPR_RESULT && parent.getType() != Token.BLOCK) {
+-      if (parent.getType() == Token.FOR && parent.getChildCount() == 4 && (n == parent.getFirstChild() ||
+-           n == parent.getFirstChild().getNext().getNext())) {
+-      } else {
+       return;
+-      }
+     }
+ 
+     boolean isResultUsed = NodeUtil.isExpressionResultUsed(n);
+     boolean isSimpleOp = NodeUtil.isSimpleOperatorType(n.getType());
+     if (!isResultUsed &&
+         (isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {
+-      if (n.isQualifiedName() && n.getJSDocInfo() != null) {
+-        return;
+-      } else if (n.isExprResult()) {
+-        return;
+-      }
+       String msg = ""This code lacks side-effects. Is there a bug?"";
+       if (n.isString()) {
+         msg = ""Is there a missing '+' on the previous line?"";
+","@@ -98,44 +98,20 @@ public void visit(NodeTraversal t, Node n, Node parent) {
+     // Do not try to remove a block or an expr result. We already handle
+     // these cases when we visit the child, and the peephole passes will
+     // fix up the tree in more clever ways when these are removed.
++    if (n.isExprResult() || n.isBlock()) {
+       return;
+     }
+ 
+     // This no-op statement was there so that JSDoc information could
+     // be attached to the name. This check should not complain about it.
++    if (n.isQualifiedName() && n.getJSDocInfo() != null) {
+       return;
+     }
+ 
+     boolean isResultUsed = NodeUtil.isExpressionResultUsed(n);
+     boolean isSimpleOp = NodeUtil.isSimpleOperatorType(n.getType());
+     if (!isResultUsed &&
+         (isSimpleOp || !NodeUtil.mayHaveSideEffects(n, t.getCompiler()))) {
+       String msg = ""This code lacks side-effects. Is there a bug?"";
+       if (n.isString()) {
+         msg = ""Is there a missing '+' on the previous line?"";
+"
+"51","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/ProcessCommonJSModules.java","@@ -125,6 +125,7 @@ private String normalizeSourceName(String filename) {
+       AbstractPostOrderCallback {
+ 
+     private int scriptNodeCount = 0;
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+@@ -204,6 +205,9 @@ private void visitScript(NodeTraversal t, Node script) {
+      */
+     private void emitOptionalModuleExportsOverride(Node script,
+         String moduleName) {
+ 
+       Node moduleExportsProp = IR.getprop(IR.name(moduleName),
+           IR.string(""module$exports""));
+@@ -225,6 +229,7 @@ private void visitModuleExports(Node prop) {
+       Node exports = prop.getChildAtIndex(1);
+       exports.putProp(Node.ORIGINALNAME_PROP, ""exports"");
+       exports.setString(""module$exports"");
+     }
+ 
+     /**
+","@@ -125,6 +125,7 @@ private String normalizeSourceName(String filename) {
+       AbstractPostOrderCallback {
+ 
+     private int scriptNodeCount = 0;
++    private Set<String> modulesWithExports = Sets.newHashSet();
+ 
+     @Override
+     public void visit(NodeTraversal t, Node n, Node parent) {
+@@ -204,6 +205,9 @@ private void visitScript(NodeTraversal t, Node script) {
+      */
+     private void emitOptionalModuleExportsOverride(Node script,
+         String moduleName) {
++      if (!modulesWithExports.contains(moduleName)) {
++        return;
++      }
+ 
+       Node moduleExportsProp = IR.getprop(IR.name(moduleName),
+           IR.string(""module$exports""));
+@@ -225,6 +229,7 @@ private void visitModuleExports(Node prop) {
+       Node exports = prop.getChildAtIndex(1);
+       exports.putProp(Node.ORIGINALNAME_PROP, ""exports"");
+       exports.setString(""module$exports"");
++      modulesWithExports.add(moduleName);
+     }
+ 
+     /**
+"
+"52","junit.framework.ComparisonFailure","/src/com/google/javascript/jscomp/TypeInference.java","@@ -1033,9 +1033,9 @@ private void updateTypeOfThisOnClosure(Node n, FunctionType fnType) {
+   }
+ 
+   private FlowScope traverseNew(Node n, FlowScope scope) {
+ 
+     Node constructor = n.getFirstChild();
+-    scope = traverse(constructor, scope);
+     JSType constructorType = constructor.getJSType();
+     JSType type = null;
+     if (constructorType != null) {
+@@ -1052,13 +1052,11 @@ private FlowScope traverseNew(Node n, FlowScope scope) {
+         }
+         if (ct != null && ct.isConstructor()) {
+           type = ct.getInstanceType();
+         }
+       }
+     }
+     n.setJSType(type);
+-    for (Node arg = constructor.getNext(); arg != null; arg = arg.getNext()) {
+-      scope = traverse(arg, scope);
+-    }
+     return scope;
+   }
+ 
+","@@ -1033,9 +1033,9 @@ private void updateTypeOfThisOnClosure(Node n, FunctionType fnType) {
+   }
+ 
+   private FlowScope traverseNew(Node n, FlowScope scope) {
++    scope = traverseChildren(n, scope);
+ 
+     Node constructor = n.getFirstChild();
+     JSType constructorType = constructor.getJSType();
+     JSType type = null;
+     if (constructorType != null) {
+@@ -1052,13 +1052,11 @@ private FlowScope traverseNew(Node n, FlowScope scope) {
+         }
+         if (ct != null && ct.isConstructor()) {
+           type = ct.getInstanceType();
++          backwardsInferenceFromCallSite(n, ct);
+         }
+       }
+     }
+     n.setJSType(type);
+     return scope;
+   }
+ 
+"
+"53","java.lang.IllegalStateException","/src/com/google/javascript/rhino/IR.java","@@ -108,6 +108,9 @@ public static Node block(Node ... stmts) {
+     return block;
+   }
+ 
+ 
+   public static Node script(Node ... stmts) {
+     // TODO(johnlenz): finish setting up the SCRIPT node
+@@ -221,8 +224,8 @@ public static Node labelName(String name) {
+   }
+ 
+   public static Node tryFinally(Node tryBody, Node finallyBody) {
+-    Preconditions.checkState(tryBody.isLabelName());
+-    Preconditions.checkState(finallyBody.isLabelName());
+     Node catchBody = block().copyInformationFrom(tryBody);
+     return new Node(Token.TRY, tryBody, catchBody, finallyBody);
+   }
+@@ -230,7 +233,7 @@ public static Node tryFinally(Node tryBody, Node finallyBody) {
+   public static Node tryCatch(Node tryBody, Node catchNode) {
+     Preconditions.checkState(tryBody.isBlock());
+     Preconditions.checkState(catchNode.isCatch());
+-    Node catchBody = block(catchNode).copyInformationFrom(catchNode);
+     return new Node(Token.TRY, tryBody, catchBody);
+   }
+ 
+","@@ -108,6 +108,9 @@ public static Node block(Node ... stmts) {
+     return block;
+   }
+ 
++  private static Node blockUnchecked(Node stmt) {
++    return new Node(Token.BLOCK, stmt);
++  }
+ 
+   public static Node script(Node ... stmts) {
+     // TODO(johnlenz): finish setting up the SCRIPT node
+@@ -221,8 +224,8 @@ public static Node labelName(String name) {
+   }
+ 
+   public static Node tryFinally(Node tryBody, Node finallyBody) {
++    Preconditions.checkState(tryBody.isBlock());
++    Preconditions.checkState(finallyBody.isBlock());
+     Node catchBody = block().copyInformationFrom(tryBody);
+     return new Node(Token.TRY, tryBody, catchBody, finallyBody);
+   }
+@@ -230,7 +233,7 @@ public static Node tryFinally(Node tryBody, Node finallyBody) {
+   public static Node tryCatch(Node tryBody, Node catchNode) {
+     Preconditions.checkState(tryBody.isBlock());
+     Preconditions.checkState(catchNode.isCatch());
++    Node catchBody = blockUnchecked(catchNode).copyInformationFrom(catchNode);
+     return new Node(Token.TRY, tryBody, catchBody);
+   }
+ 
+"
+"54","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/InlineObjectLiterals.java","@@ -154,6 +154,7 @@ private boolean isVarInlineForbidden(Var var) {
+      */
+     private boolean isInlinableObject(List<Reference> refs) {
+       boolean ret = false;
+       for (Reference ref : refs) {
+         Node name = ref.getNode();
+         Node parent = ref.getParent();
+@@ -178,6 +179,14 @@ private boolean isInlinableObject(List<Reference> refs) {
+           // We short-circuit this problem by bailing out if we see a reference
+           // to a property that isn't defined on the object literal. This
+           // isn't a perfect algorithm, but it should catch most cases.
+           continue;
+         }
+ 
+@@ -213,6 +222,7 @@ private boolean isInlinableObject(List<Reference> refs) {
+             return false;
+           }
+ 
+ 
+           Node childVal = child.getFirstChild();
+           // Check if childVal is the parent of any of the passed in
+","@@ -154,6 +154,7 @@ private boolean isVarInlineForbidden(Var var) {
+      */
+     private boolean isInlinableObject(List<Reference> refs) {
+       boolean ret = false;
++      Set<String> validProperties = Sets.newHashSet();
+       for (Reference ref : refs) {
+         Node name = ref.getNode();
+         Node parent = ref.getParent();
+@@ -178,6 +179,14 @@ private boolean isInlinableObject(List<Reference> refs) {
+           // We short-circuit this problem by bailing out if we see a reference
+           // to a property that isn't defined on the object literal. This
+           // isn't a perfect algorithm, but it should catch most cases.
++          String propName = parent.getLastChild().getString();
++          if (!validProperties.contains(propName)) {
++            if (NodeUtil.isVarOrSimpleAssignLhs(parent, gramps)) {
++              validProperties.add(propName);
++            } else {
++              return false;
++            }
++          }
+           continue;
+         }
+ 
+@@ -213,6 +222,7 @@ private boolean isInlinableObject(List<Reference> refs) {
+             return false;
+           }
+ 
++          validProperties.add(child.getString());
+ 
+           Node childVal = child.getFirstChild();
+           // Check if childVal is the parent of any of the passed in
+"
+"55","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/FlowSensitiveInlineVariables.java","@@ -154,7 +154,7 @@ public void exitScope(NodeTraversal t) {}
+ 
+   @Override
+   public void process(Node externs, Node root) {
+-    (new NodeTraversal(compiler, this)).traverse(root);
+   }
+ 
+   @Override
+/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java @@ -68,6 +68,7 @@
+   private static class Definition {
+     final Node node;
+     final Set<Var> depends = Sets.newHashSet();
+ 
+     Definition(Node node) {
+       this.node = node;
+@@ -393,9 +394,13 @@ private void computeDependence(final Definition def, Node rValue) {
+         new AbstractCfgNodeTraversalCallback() {
+       @Override
+       public void visit(NodeTraversal t, Node n, Node parent) {
+-        if (n.isName() && jsScope.isDeclared(n.getString(), true)) {
+           Var dep = jsScope.getVar(n.getString());
+             def.depends.add(dep);
+         }
+       }
+     });
+@@ -427,6 +432,9 @@ boolean dependsOnOuterScopeVars(String name, Node useNode) {
+     GraphNode<Node, Branch> n = getCfg().getNode(useNode);
+     FlowState<MustDef> state = n.getAnnotation();
+     Definition def = state.getIn().reachingDef.get(jsScope.getVar(name));
+ 
+     for (Var s : def.depends) {
+       if (s.scope != jsScope) {
+","@@ -154,7 +154,7 @@ public void exitScope(NodeTraversal t) {}
+ 
+   @Override
+   public void process(Node externs, Node root) {
++    (new NodeTraversal(compiler, this)).traverseRoots(externs, root);
+   }
+ 
+   @Override
+/src/com/google/javascript/jscomp/MustBeReachingVariableDef.java @@ -68,6 +68,7 @@
+   private static class Definition {
+     final Node node;
+     final Set<Var> depends = Sets.newHashSet();
++    private boolean unknownDependencies = false;
+ 
+     Definition(Node node) {
+       this.node = node;
+@@ -393,9 +394,13 @@ private void computeDependence(final Definition def, Node rValue) {
+         new AbstractCfgNodeTraversalCallback() {
+       @Override
+       public void visit(NodeTraversal t, Node n, Node parent) {
++        if (n.isName()) {
+           Var dep = jsScope.getVar(n.getString());
++          if (dep == null) {
++            def.unknownDependencies = true;
++          } else {
+             def.depends.add(dep);
++          }
+         }
+       }
+     });
+@@ -427,6 +432,9 @@ boolean dependsOnOuterScopeVars(String name, Node useNode) {
+     GraphNode<Node, Branch> n = getCfg().getNode(useNode);
+     FlowState<MustDef> state = n.getAnnotation();
+     Definition def = state.getIn().reachingDef.get(jsScope.getVar(name));
++    if (def.unknownDependencies) {
++      return true;
++    }
+ 
+     for (Var s : def.depends) {
+       if (s.scope != jsScope) {
+"
+"56","junit.framework.AssertionFailedError","/src/com/google/javascript/jscomp/Compiler.java","@@ -1282,7 +1282,6 @@ Node parseInputs() {
+ 
+       // Check if the sources need to be re-ordered.
+       if (options.dependencyOptions.needsManagement() &&
+-          !options.skipAllPasses &&
+           options.closurePass) {
+         for (CompilerInput input : inputs) {
+           // Forward-declare all the provided types, so that they
+","@@ -1282,7 +1282,6 @@ Node parseInputs() {
+ 
+       // Check if the sources need to be re-ordered.
+       if (options.dependencyOptions.needsManagement() &&
+           options.closurePass) {
+         for (CompilerInput input : inputs) {
+           // Forward-declare all the provided types, so that they
+"
