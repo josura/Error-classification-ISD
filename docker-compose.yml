@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+    elastic-search:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        networks:
+            - entomomachia
+        environment:
+            - discovery.type=single-node
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+    kibana: 
+        image: docker.elastic.co/kibana/kibana:7.7.0
+        networks: 
+            - entomomachia
+        environment: 
+            SERVER_NAME: kibana
+            ELASTICSEARCH_HOSTS: http://elastic-search:9200
+        ports:
+            - "5601:5601"
+    zoo:
+        image: zookeeper:3.4.9
+        networks:
+            - entomomachia
+        restart: unless-stopped
+        hostname: zoo
+        ports:
+            - "2181:2181"
+    kafka:
+        image: confluentinc/cp-kafka:5.5.0
+        networks:
+            - entomomachia
+        environment:
+            - KAFKA_ZOOKEEPER_CONNECT=zoo:2181
+            - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092, LISTENER_LOCALHOST://localhost:29092
+            - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,LISTENER_LOCALHOST:PLAINTEXT
+            - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+        depends_on:
+            - zoo
+        ports:
+            - "9092:9092"
+            - "29092:29092"
+    general-classifier:
+        build: mining/generalframework
+        networks: 
+            - entomomachia
+        volumes:
+            - ./mining/data:/opt/mining/data/
+            - ./logs:/opt/logs/
+            - ./mining/generalframework:/opt/generalframework
+        
+
+
+networks:
+    entomomachia:
+        external: false
+
+volumes:
+    permanentdata: 
