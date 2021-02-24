@@ -2,7 +2,7 @@ name: Scala CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main , errorPredictionFeature]
   pull_request:
     branches: [ main ]
 
