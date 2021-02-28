@@ -7,8 +7,7 @@ import scala.io.Source
 
 object  CodeCleaner {
 
-    //val symbolFile = "/opt/mining/data/javaSyntax.txt"
-    val symbolFile = "../data/javaSyntax.txt"
+    val symbolFile = FileResolver.getDataDirectory() + "javaSyntax.txt"
 
     val symbols = Source.fromFile(symbolFile).getLines.mkString.split("[ ,.\"]").filter((str)=> !str.isEmpty)
 

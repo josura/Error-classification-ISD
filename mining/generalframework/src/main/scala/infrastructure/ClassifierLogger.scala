@@ -12,9 +12,8 @@ import scala.io.Source
 
 object ClassifierLogger extends LazyLogging{
 
-  val logFile="../../../../../../logs/classifierlog.log"
-  //val logFile= "/opt/logs/classifierlog.log"
-  val writer = new FileWriter(new File(logFile))
+  val logFile = FileResolver.getLogsDirectory() + "classifierlog.log"
+  //val writer = new FileWriter(new File(logFile))
   val myFormatObj:DateTimeFormatter = DateTimeFormatter.ofPattern("[dd-MM-yyyy HH:mm:ss]");
   
   def printInfo(text:String){
