@@ -12,6 +12,8 @@ lazy val root = (project in file("."))
 
 libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.2.2" % Test,
+  "org.scalamock" %% "scalamock" % "5.1.0" % Test,
+  //"org.mockito" %% "mockito-scala" % "1.5.18" % Test,
   //main libraries for spark 
   ("org.apache.spark" %% "spark-core" % "2.4.5"),
   ("org.apache.spark" %% "spark-mllib" % "2.4.5"),

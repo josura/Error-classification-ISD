@@ -45,8 +45,10 @@ services:
         build: mining/generalframework
         networks: 
             - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
         volumes:
-            - ./mining/data:/opt/mining/data/
+            - ./mining/data:/opt/data/
             - ./logs:/opt/logs/
             - ./mining/generalframework:/opt/generalframework
         

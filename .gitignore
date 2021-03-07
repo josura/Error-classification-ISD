@@ -23,9 +23,10 @@
 hs_err_pid*
 
 
-#vs, metals folders
+#vs, metals folders and others from builds
 *.metals
 *.bloop
 *.vscode
 *project
 *target
+*.Rhistory
