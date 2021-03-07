@@ -1,3 +1,5 @@
+library(jsonlite)
+
 test <- read.csv("test.csv")
 
 notfinal <- read.csv("notfinalBugs.csv")
@@ -16,3 +18,8 @@ dfcodes["solution"] <- dfsolutions$solution
 
 write.csv(dfcodes,"Final.csv",row.names = FALSE)
 
+fullfinal <- read.csv("FullFinal.csv")
+
+jsonText <- toJSON(fullfinal)
+
+write(jsonText,file="FullFinalJson.json")
