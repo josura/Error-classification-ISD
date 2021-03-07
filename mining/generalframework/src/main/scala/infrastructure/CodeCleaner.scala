@@ -12,21 +12,20 @@ object  CodeCleaner {
     val symbols = Source.fromFile(symbolFile).getLines.mkString.split("[ ,.\"]").filter((str)=> !str.isEmpty)
 
     def cleanCodeString(str:String):String = {
-        str.split("[ ,.\"();]").filter((str)=> !str.isEmpty && symbols.contains(str)).mkString(" ")
+        str.split("[ ,.\"();{}]").filter((str)=> !str.isEmpty && symbols.contains(str)).mkString(" ")
     }
 
     val cleaner = udf((code:String)=> {
-
-        cleanCodeString(code);
+        cleanCodeString(code)
     })
 
-    def cleanCode(data:Dataset[Row]):Dataset[Row] = {
+    def cleanCode(data:Dataset[Row],colName:String,cleanedColName:String):Dataset[Row] = {
         if(data.isEmpty){
             ClassifierLogger.printWarning("code cleaner on an empty dataset")
             return data
         }
         ClassifierLogger.printInfo(" cleaning code ")
-        var cleanedata = data.withColumn("cleanedCode",cleaner(data("code")))
+        var cleanedata = data.withColumn(cleanedColName,cleaner(data(colName)))
         cleanedata.na.drop
     }
 

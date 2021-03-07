@@ -22,6 +22,7 @@ class SparkProxy(appName:String) {
     var started:Boolean=true
     lazy val spark:SparkSession=SparkSession.builder.appName(appName).
             config("es.nodes","elastic-search").config("es.index.auto.create", "true").config("es.port","9200").//config("es.nodes.wan.only", "true").
+            //config("spark.sql.crossJoin.enabled", "true").
             master("local[*]").getOrCreate()
     
     import spark.implicits._

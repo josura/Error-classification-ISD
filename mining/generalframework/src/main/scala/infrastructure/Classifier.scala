@@ -11,31 +11,77 @@ import org.apache.spark.sql.types.IntegerType
 
 //pipeline e clustering
 import org.apache.spark.ml.{Pipeline, PipelineModel}
-import org.apache.spark.ml.feature.{HashingTF, Tokenizer}
+import org.apache.spark.ml.feature.{HashingTF, Tokenizer, StringIndexer}
 import org.apache.spark.ml.linalg.Vector
 
 import org.apache.spark.ml.clustering.KMeans
 import org.apache.spark.ml.evaluation.ClusteringEvaluator
 import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.Word2Vec
 
 
 
-class Classifier(var spark:SparkSession,var dataset:Dataset[Row]){
-    val bugsFile = FileResolver.getDataDirectory() + "final.json"
+abstract class Classifier(var spark:SparkProxy,protected var dataset:Dataset[Row]){
+    var datasetChanged:Boolean = true
 
-
-    def createPipelineTokenizer() :Pipeline = {
-        val tokenizer = new Tokenizer().setInputCol("code").setOutputCol("words")
+    protected def createPipelineTokenizerTF(inputCol:String) :Pipeline = {
+        val tokenizer = new Tokenizer().setInputCol(inputCol).setOutputCol("words")
         val hashingTF = new HashingTF().setNumFeatures(1000).setInputCol(tokenizer.getOutputCol).setOutputCol("features")
         new Pipeline().setStages(Array(tokenizer, hashingTF))
     }
 
+    protected def createPipelineTokenizerW2V(inputCol:String) :Pipeline = {
+        val word2Vec = new Word2Vec().setVectorSize(300).setMinCount(0).setInputCol(inputCol).setOutputCol("features")
+        new Pipeline().setStages(Array(word2Vec))
+    }
+    // to create labels
+    protected def createPipelineKmeans(numcluster:Int,inputCol:String):Pipeline = {
+        val tokenizer = new Tokenizer().setInputCol(inputCol).setOutputCol("words")
+        val word2Vec = new Word2Vec().setVectorSize(300).setMinCount(0).setInputCol(tokenizer.getOutputCol).setOutputCol("features")
+        val kmeans = new KMeans().setK(numcluster).setSeed(1L)
+        new Pipeline().setStages(Array(tokenizer,word2Vec, kmeans))
+    }
+
+    protected def createPipelinePerceptrons(layers:Array[Int],inputCol:String) :Pipeline = {
+        val tokenizer = new Tokenizer().setInputCol(inputCol).setOutputCol("words")
+        val word2Vec = new Word2Vec().setVectorSize(300).setMinCount(0).setInputCol(tokenizer.getOutputCol).setOutputCol("features")
+        val trainer = new MultilayerPerceptronClassifier().setLayers(layers).setBlockSize(128).setSeed(1234L).setMaxIter(100)
+        new Pipeline().setStages(Array(tokenizer,word2Vec, trainer))
+    }
+
+    var modelErrors:PipelineModel=null;
+    var modelMutations:PipelineModel=null;
+
+    protected def initializeModels():Unit
+
+    def setDataset(_data:Dataset[Row]){
+        if(_data!=null && !_data.isEmpty){
+            dataset = _data
+            datasetChanged = true
+        }
+    }
+
+
     def ClassifyCode(data:Dataset[Row]):Dataset[Row] = {
-        data
+        initializeModels()
+        var full:Dataset[Row]=null;
+        if(data!=null && !data.isEmpty ){
+            ClassifierLogger.printInfo("Classifying errors and mutations with "+ this.getClass.getName )
+            val mutations = (modelMutations transform data).withColumnRenamed("prediction","labelMutant").drop("words","features")
+
+            val errors = (modelErrors transform data).withColumnRenamed("prediction","labelError").drop("words","features")
+
+            full = errors.join(mutations,errors("ids")===mutations("ids") && errors("code")===mutations("code"))
+        }else{
+            ClassifierLogger.printWarning("classifying an empty or null dataframe")
+        }
+        full
     }
 
     def AddErrorSolution(data:Dataset[Row]):Dataset[Row] = {
+        datasetChanged=false
+        initializeModels()
         data
     }
 
