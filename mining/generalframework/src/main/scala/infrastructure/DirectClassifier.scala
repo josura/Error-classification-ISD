@@ -5,7 +5,7 @@ import org.apache.spark.sql.Row
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.sql.types.IntegerType
 
-class DirectClassifier(private var _spark:SparkProxy,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
+class DirectClassifier(private var _spark:SparkFacade,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
 
     override def initializeModels(){
         if(datasetChanged){

@@ -6,7 +6,7 @@ object MainClassification extends App{
 
     val bugsFile = FileResolver.getDataDirectory() + "final.json"
 
-    val spark = new SparkProxy("Main")
+    val spark = new SparkFacade("Main")
 
     val bugs: Dataset[Row]=  spark.sparkReadJson(bugsFile)
     bugs cache

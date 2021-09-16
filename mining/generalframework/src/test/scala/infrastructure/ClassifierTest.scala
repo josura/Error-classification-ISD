@@ -17,7 +17,7 @@ class ClassifierTest extends AnyFunSuite with MockFactory{
 
     val bugsFile = FileResolver.getDataDirectory() + "final.json"
 
-    val sparkProxy = new SparkProxy("test classifier")
+    val sparkProxy = new SparkFacade("test classifier")
 
     val streamDF = Seq(jsonTest1,jsonTest2).toDF("value")
     
@@ -25,11 +25,11 @@ class ClassifierTest extends AnyFunSuite with MockFactory{
 
     val trainDF = CodeCleaner.cleanCode(CodeCleaner.cleanCode(sparkProxy.sparkReadJson(bugsFile),"CodeWithNoComments","cleanedCode"),"SolutionWithNoComments","cleanedSolution")
 
-    val mockSparkProxy = mock[SparkProxy]
+    val mockSparkFacade = mock[SparkFacade]
 
-    val clusClassifier:Classifier = new ClusterClassifier(mockSparkProxy,trainDF)
+    val clusClassifier:Classifier = new ClusterClassifier(mockSparkFacade,trainDF)
 
-    val direClassifier:Classifier = new DirectClassifier(mockSparkProxy,trainDF)
+    val direClassifier:Classifier = new DirectClassifier(mockSparkFacade,trainDF)
     
     def testSchema(schema:StructType,names:List[String]):Boolean={
         try{

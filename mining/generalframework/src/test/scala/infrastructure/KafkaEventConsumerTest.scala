@@ -16,14 +16,14 @@ class KafkaEventConsumerTest extends AnyFunSuite with MockFactory {
         master("local[*]").getOrCreate()
 
     test("kafka Consumer return non empty dataframe") {
-        val mockSparkProxy = mock[SparkProxy]
+        val mockSparkFacade = mock[SparkFacade]
         
         import spark.implicits._
 
         val returnDF = Seq(jsonTest1).toDF("value")
-        (mockSparkProxy.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
+        (mockSparkFacade.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
 
-        val consumer = new KafkaEventConsumer(mockSparkProxy)
+        val consumer = new KafkaEventConsumer(mockSparkFacade)
 
         val data = consumer.Consume("UserCode",schema)
 
@@ -40,13 +40,13 @@ class KafkaEventConsumerTest extends AnyFunSuite with MockFactory {
         true
     }
     test("kafka Consumer return right schema dataframe from json") {
-        val mockSparkProxy = mock[SparkProxy]
+        val mockSparkFacade = mock[SparkFacade]
         import spark.implicits._
 
         val returnDF = Seq(jsonTest1).toDF("value")
-        (mockSparkProxy.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
+        (mockSparkFacade.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
 
-        val consumer = new KafkaEventConsumer(mockSparkProxy)
+        val consumer = new KafkaEventConsumer(mockSparkFacade)
 
         val data = consumer.Consume("UserCode",schema)
 
@@ -56,13 +56,13 @@ class KafkaEventConsumerTest extends AnyFunSuite with MockFactory {
         
     }
     test("kafka Consumer return right number of records dataframe from json") {
-        val mockSparkProxy = mock[SparkProxy]
+        val mockSparkFacade = mock[SparkFacade]
         import spark.implicits._
 
         val returnDF = Seq(jsonTest1,jsonTest2).toDF("value")
-        (mockSparkProxy.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
+        (mockSparkFacade.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
 
-        val consumer = new KafkaEventConsumer(mockSparkProxy)
+        val consumer = new KafkaEventConsumer(mockSparkFacade)
 
         val data = consumer.Consume("UserCode",schema)
 
@@ -72,13 +72,13 @@ class KafkaEventConsumerTest extends AnyFunSuite with MockFactory {
     }
 
     test("kafka Consumer return right dataframe from json") {
-        val mockSparkProxy = mock[SparkProxy]
+        val mockSparkFacade = mock[SparkFacade]
         import spark.implicits._
 
         val returnDF = Seq(jsonTest1).toDF("value")
-        (mockSparkProxy.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
+        (mockSparkFacade.sparkReadStreamKafka _).expects("UserCode").returning(returnDF).once()
 
-        val consumer = new KafkaEventConsumer(mockSparkProxy)
+        val consumer = new KafkaEventConsumer(mockSparkFacade)
 
         val data = consumer.Consume("UserCode",schema).select("ids","error","source","code","solution","user","group")
 

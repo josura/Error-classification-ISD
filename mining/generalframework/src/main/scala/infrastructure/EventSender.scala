@@ -6,6 +6,6 @@ import org.apache.spark.sql.types.StructType
 
 
 
-abstract class EventSender(var spark:SparkProxy) {
+abstract class EventSender(var spark:SparkFacade) {
   def Send(data:Dataset[Row],topics:String,schema:StructType)
 }

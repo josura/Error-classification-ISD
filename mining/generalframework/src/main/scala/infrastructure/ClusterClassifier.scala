@@ -3,7 +3,7 @@ package infrastructure
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 
-class ClusterClassifier(private var _spark:SparkProxy,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
+class ClusterClassifier(private var _spark:SparkFacade,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
     override def initializeModels(){
         if(datasetChanged){
             datasetChanged = false

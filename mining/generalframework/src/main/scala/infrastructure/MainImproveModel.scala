@@ -4,7 +4,7 @@ import org.apache.spark.sql.{SparkSession,Row,Dataset,SaveMode}
 
 object MainImproveModel extends App{
 
-    val spark = new SparkProxy("Main improve model")
+    val spark = new SparkFacade("Main improve model")
 
     val bugs: Dataset[Row]=  spark.sparkReadJson(FileResolver.getDataDirectory() + "final.json")
     bugs cache

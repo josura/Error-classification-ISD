@@ -22,7 +22,7 @@ import org.apache.spark.ml.feature.Word2Vec
 
 
 
-abstract class Classifier(var spark:SparkProxy,protected var dataset:Dataset[Row]){
+abstract class Classifier(var spark:SparkFacade,protected var dataset:Dataset[Row]){
     var datasetChanged:Boolean = true
 
     protected def createPipelineTokenizerTF(inputCol:String) :Pipeline = {
