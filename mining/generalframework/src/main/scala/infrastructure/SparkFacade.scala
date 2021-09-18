@@ -36,9 +36,12 @@ class SparkFacade(appName:String) {
         
     }
 
-    def sparkWriteDataElastic(data:Dataset[Row],id:String){
-        data.
-            saveToEs("test/labelledCode", Map("es.mapping.id" -> id))
+    def sparkWriteDataElastic(data:Dataset[Row],indexName:String,id:String = ""){
+        if(!id.isEmpty()){
+            data.saveToEs(indexName, Map("es.mapping.id" -> id))
+        } else {
+            data.saveToEs(indexName)
+        }
     }
 
 

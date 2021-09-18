@@ -3,11 +3,10 @@ package infrastructure
 import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 
-class ClusterClassifier(private var _spark:SparkFacade,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
+class ClusterClassifier(private var _spark:SparkFacade,private var _dataset:Dataset[Row], private var expectedElementsForCluster:Double = 3.0) extends Classifier(_spark,_dataset){
     override def initializeModels(){
         if(datasetChanged){
             datasetChanged = false
-            val expectedElementsForCluster = 3.0
             val numberCluster = (dataset.count/expectedElementsForCluster).ceil.toInt
 
             val neuralLayers = Array(300,200,numberCluster)
