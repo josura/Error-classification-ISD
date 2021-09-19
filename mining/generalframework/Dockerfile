@@ -15,4 +15,4 @@ RUN sbt compile
 
 CMD [ "bash" ]
 
-#ENTRYPOINT [ "sbt", "run" ]
+#ENTRYPOINT [ "sbt", "runMain" , "infrastructure.MainClassification"]

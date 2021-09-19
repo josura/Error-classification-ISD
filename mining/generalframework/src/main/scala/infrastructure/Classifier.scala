@@ -68,11 +68,12 @@ abstract class Classifier(var spark:SparkFacade,protected var dataset:Dataset[Ro
         var full:Dataset[Row]=null;
         if(data!=null && !data.isEmpty ){
             ClassifierLogger.printInfo("Classifying errors and mutations with "+ this.getClass.getName )
-            val mutations = (modelMutations transform data).withColumnRenamed("prediction","labelMutant").drop("words","features")
+            val mutations = (modelMutations transform data).withColumnRenamed("prediction","labelMutation").withColumnRenamed("probability","probabilityMutation").withColumnRenamed("rawPrediction","rawPredictionMutation")
 
-            val errors = (modelErrors transform data).withColumnRenamed("prediction","labelError").drop("words","features")
+            val errors = (modelErrors transform data).withColumnRenamed("prediction","labelError").withColumnRenamed("probability","probabilityError").withColumnRenamed("rawPrediction","rawPredictionError").select("ids","code","labelError","probabilityError","rawPredictionError")
 
-            full = errors.join(mutations,errors("ids")===mutations("ids") && errors("code")===mutations("code"))
+            //full = errors.join(mutations,errors("ids")===mutations("ids") && errors("code")===mutations("code"))
+            full = errors.join(mutations, Seq("ids","code"))
         }else{
             ClassifierLogger.printWarning("classifying an empty or null dataframe")
         }

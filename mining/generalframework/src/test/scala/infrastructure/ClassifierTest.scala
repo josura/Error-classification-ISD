@@ -59,7 +59,7 @@ class ClassifierTest extends AnyFunSuite with MockFactory{
     test("cluster classifier returns right schema"){
         val testDF = clusClassifier.ClassifyCode(returnDF)
 
-        val schemaList = List("ids","code","labelError","labelMutant")
+        val schemaList = List("ids","code","labelError","labelMutation","probabilityError","rawPredictionError","probabilityMutation","rawPredictionMutation")
 
         assert(testSchema(testDF.schema,schemaList))
     }
