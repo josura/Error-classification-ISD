@@ -19,28 +19,62 @@ services:
             ELASTICSEARCH_HOSTS: http://elastic-search:9200
         ports:
             - "5601:5601"
-    zoo:
-        image: zookeeper:3.4.9
-        networks:
-            - entomomachia
-        restart: unless-stopped
-        hostname: zoo
-        ports:
-            - "2181:2181"
-    kafka:
-        image: confluentinc/cp-kafka:5.5.0
-        networks:
-            - entomomachia
+    #zoo:
+    #    image: confluentinc/cp-zookeeper:latest
+    #    networks:
+    #        - entomomachia
+    #    restart: unless-stopped
+    #    hostname: zoo
+    #    ports:
+    #        - "2181:2181"
+    #kafka:
+    #    image: confluentinc/cp-kafka:latest
+    #    networks:
+    #        - entomomachia
+    #    environment:
+    #        - KAFKA_ZOOKEEPER_CONNECT=zoo:2181
+    #        - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092, LISTENER_LOCALHOST://localhost:29092
+    #        - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,LISTENER_LOCALHOST:PLAINTEXT
+    #        - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    #    depends_on:
+    #        - zoo
+    #    ports:
+    #        - "9092:9092"
+    #        - "29092:29092"
+
+    #TESTING
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
         environment:
-            - KAFKA_ZOOKEEPER_CONNECT=zoo:2181
-            - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092, LISTENER_LOCALHOST://localhost:29092
-            - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,LISTENER_LOCALHOST:PLAINTEXT
-            - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+          ZOOKEEPER_CLIENT_PORT: 32181
+          ZOOKEEPER_TICK_TIME: 2000
+        networks:
+          - entomomachia
+    
+    kafka:
+        image: wurstmeister/kafka:latest
         depends_on:
-            - zoo
+          - zookeeper
+        environment:
+          KAFKA_BROKER_ID: 1
+          KAFKA_ADVERTISED_HOST_NAME: 0.0.0.0
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
+          KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+          KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+          JMX_PORT: 9999
+        networks:
+          - entomomachia
+      
+    kafka-manager:
+        image: sheepkiller/kafka-manager:latest
+        environment:
+          ZK_HOSTS: "zookeeper:32181"
         ports:
-            - "9092:9092"
-            - "29092:29092"
+          - 9000:9000
+        networks:
+          - entomomachia
+    #TESTING
+
     general-classifier:
         build: mining/generalframework
         networks: 
@@ -51,12 +85,23 @@ services:
             - ./mining/data:/opt/data/
             - ./logs:/opt/logs/
             - ./mining/generalframework:/opt/generalframework
-        
+    kafkacat:
+        image: confluentinc/cp-kafkacat:5.0.0
+        stdin_open: true 
+        tty: true
+        networks: 
+            - entomomachia
 
 
 networks:
     entomomachia:
         external: false
+
+#TESTING
+#networks:
+#    bridge:
+#      driver: bridge
+#TESTING
 
 volumes:
     permanentdata: 

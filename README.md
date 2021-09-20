@@ -4,6 +4,7 @@ This project was built for a course at university (engineering of distributed sy
 
 ## IMPLEMENTED
 > - Classification framework for errors and mutations based on code passed on input
+> - receiving and sending streaming data from kafka, to kafka(to revise after Client and REST API backend is done)
 
 ## TODOs
 > - Classification of stream data

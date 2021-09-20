@@ -11,8 +11,12 @@ ADD build.sbt build.sbt
 
 RUN sbt compile
 
+RUN mkdir /sparkcheckpoints
+
 #ENTRYPOINT [ "sbt", "test" ]
 
-CMD [ "bash" ]
+#CMD [ "bash" ]
 
-#ENTRYPOINT [ "sbt", "runMain" , "infrastructure.MainClassification"]
+#ENTRYPOINT [ "sbt" , "run" ]
+
+ENTRYPOINT [ "/bin/sh" , "entrypoint.sh" ]

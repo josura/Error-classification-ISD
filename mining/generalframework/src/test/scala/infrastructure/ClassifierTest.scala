@@ -41,9 +41,9 @@ class ClassifierTest extends AnyFunSuite with MockFactory{
     }
 
     test("direct classifier returns non empty dataframe(TESTABLE BUT SLOW BECAUSE DATASET IS TOO LITTLE AND CONVERGENCE IS NOT REACHED QUICKLY)"){
-        //val testDF = direClassifier.ClassifyCode(returnDF)
-        //assert(!testDF.isEmpty)
-        assert(true)
+        val testDF = direClassifier.ClassifyCode(returnDF)
+        assert(!testDF.isEmpty)
+        //assert(true)
     }
 
     test("cluster classifier returns non empty dataframe"){

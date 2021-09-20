@@ -1,0 +1,1 @@
+sbt 'runMain infrastructure.MainClassification'

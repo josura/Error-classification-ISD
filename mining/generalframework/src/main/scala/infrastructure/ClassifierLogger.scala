@@ -28,6 +28,7 @@ object ClassifierLogger extends LazyLogging{
 
     writer.write(formattedDate + " INFO: "+text+ "\n")
     writer.close()
+    println(formattedDate + " INFO: "+text)
   }
 
   def printDebug(text:String){
@@ -41,6 +42,8 @@ object ClassifierLogger extends LazyLogging{
 
     writer.write(formattedDate + " DEBUG: "+text+ "\n")
     writer.close()
+    println(formattedDate + " DEBUG: "+text)
+
   }
 
   def printWarning(text:String){
@@ -55,6 +58,7 @@ object ClassifierLogger extends LazyLogging{
 
     writer.write(formattedDate + " WARNING: "+text+ "\n")
     writer.close()
+    println(formattedDate + " WARNING: "+text)
   }
 
   def printError(text:String,exception:Throwable){
@@ -69,5 +73,6 @@ object ClassifierLogger extends LazyLogging{
 
     writer.write(formattedDate + " ERROR: "+text + "\n\t exception: " + exception.toString+ "\n")
     writer.close()
+    println(formattedDate + " ERROR: "+text)
   }
 }

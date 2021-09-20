@@ -50,7 +50,7 @@ class SparkFacade(appName:String) {
         spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe",topics).load()
     }
 
-    def sparkWriteStreamKafka(data:Dataset[Row],topic:String){
+    def sparkWriteStreamKafka(data:Dataset[Row],topic:String):StreamingQuery = {
         data.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").  //casting ?? TODO control
             writeStream.
             format("kafka").
