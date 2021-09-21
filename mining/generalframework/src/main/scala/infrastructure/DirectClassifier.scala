@@ -4,11 +4,20 @@ import org.apache.spark.sql.Dataset
 import org.apache.spark.sql.Row
 import org.apache.spark.ml.feature.StringIndexer
 import org.apache.spark.sql.types.IntegerType
+import org.apache.spark.ml.PipelineModel
 
 class DirectClassifier(private var _spark:SparkFacade,private var _dataset:Dataset[Row]) extends Classifier(_spark,_dataset){
 
     override def initializeModels(){
-        if(datasetChanged){
+        if(scala.reflect.io.File("model/directClassifierPipelineErrors").exists && datasetChanged){
+            datasetChanged = false
+            ClassifierLogger.printInfo("Direct model loaded from previously trained model")
+
+            modelErrors = PipelineModel.read.load("model/directClassifierPipelineErrors")
+
+            modelMutations = PipelineModel.read.load("model/directClassifierPipelineMutations")
+
+        } else if(datasetChanged){
             datasetChanged = false
 
             val stringIndCode = new StringIndexer().setInputCol("cleanedCode").setOutputCol("label")
@@ -29,6 +38,9 @@ class DirectClassifier(private var _spark:SparkFacade,private var _dataset:Datas
             modelErrors = createPipelinePerceptrons(neuralLayersSolutions,"cleanedCode") fit dataSolutions
 
             modelMutations = createPipelinePerceptrons(neuralLayersErrors,"cleanedCode") fit dataErrors
+
+            modelMutations.write.overwrite.save("model/directClassifierPipelineMutations")
+            modelErrors.write.overwrite.save("model/directClassifierPipelineErrors")
         }
     }
   

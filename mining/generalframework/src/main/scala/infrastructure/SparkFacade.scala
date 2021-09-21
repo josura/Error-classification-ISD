@@ -47,15 +47,24 @@ class SparkFacade(appName:String) {
 
     def sparkReadStreamKafka(topics:String):Dataset[Row] = {
         if(started) sparkInit()
-        spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe",topics).load()
+        spark.readStream.format("kafka").
+            option("kafka.bootstrap.servers","kafka:9092").
+            option("subscribe",topics).
+            option("failOnDataLoss","false").
+            //option("startingOffsets", "earliest").  //PROBLEMS IF THE DATA IS NOT WITH THE RIGHT SCHEMA IN THE JSON
+            load()
     }
 
     def sparkWriteStreamKafka(data:Dataset[Row],topic:String):StreamingQuery = {
-        data.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").  //casting ?? TODO control
+        data.
+            selectExpr("CAST(ids AS STRING) AS key", "labels AS value").
+            //selectExpr("CAST(ids AS STRING) AS key", "to_json(struct(*)) AS value").  //casting ?? TODO control
             writeStream.
             format("kafka").
+            outputMode("append").
             option("kafka.bootstrap.servers", "kafka:9092").
             option("topic", topic).
+            option("checkpointLocation","/sparkcheckpoints").
             start()
     }
 
@@ -67,7 +76,7 @@ class SparkFacade(appName:String) {
     def sparkWriteStreamElastic(data:Dataset[Row]):StreamingQuery = {
         if(started) sparkInit()
         data.writeStream.outputMode("append").
-            format("es").option("checkpointLocation","/tmp").
+            format("es").option("checkpointLocation","/sparkcheckpoints").
             option("es.mapping.id","url").start("code/classified")
     }
 
