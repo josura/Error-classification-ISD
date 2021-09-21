@@ -63,10 +63,10 @@ abstract class Classifier(var spark:SparkFacade,protected var dataset:Dataset[Ro
     }
 
 
-    def ClassifyCode(data:Dataset[Row]):Dataset[Row] = {
+    def ClassifyCode(data:Dataset[Row],streaming:Boolean=false):Dataset[Row] = {
         initializeModels()
         var full:Dataset[Row]=null;
-        if(data!=null && !data.isEmpty ){
+        if(streaming || (data!=null && !data.isEmpty) ){
             ClassifierLogger.printInfo("Classifying errors and mutations with "+ this.getClass.getName )
             val mutations = (modelMutations transform data).withColumnRenamed("prediction","labelMutation").withColumnRenamed("probability","probabilityMutation").withColumnRenamed("rawPrediction","rawPredictionMutation")
 

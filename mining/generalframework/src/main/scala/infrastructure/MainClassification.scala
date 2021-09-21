@@ -46,36 +46,46 @@ object MainClassification extends App{
         elasticSender.Send( sendedClassified )
 
         // receiving streming data from kafka from the client
-        //val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
-        //val schema=new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
-        //val newCode = kafkaStreamingReceiver.Consume("usercode",schema)
+        val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
+        val schema=new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
+        println("TEST1")
+        val newCode = kafkaStreamingReceiver.Consume("usercode",schema)
+        println("TEST2")
+
+        val newpredictions:Dataset[Row] = clusClass.ClassifyCode(newCode,streaming = true)
+        println("TEST3")
+        val consoleStream = spark.sparkWriteStreamConsole(newpredictions).awaitTermination()  //TODO refactor in  console event class
+        println("TEST4")
+        //val kafkaStreamSender = spark.sparkWriteStreamKafka(newpredictions,"labelledcode").awaitTermination()    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
+        
+        // TESTING
+        //val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
+        //val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
+        //val schema = new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
+        //import spark.spark.implicits._
+        //import org.apache.spark.sql.functions._
+        //val UserCode:Dataset[Row] = CodeCleaner.cleanCode(StringDF.select(from_json(col("value"),schema).as("data")).select("data.*"),"code","cleanedCode")
 //
-        //val newpredictions:Dataset[Row] = clusClass.ClassifyCode(newCode)
-        //val consoleStream = spark.sparkWriteStreamConsole(newpredictions)  //TODO refactor in  console event class
+        //val newpredictions:Dataset[Row] = clusClass.ClassifyCode(UserCode)
 //
-        //val kafkaStreamSender = spark.sparkWriteStreamKafka(newpredictions,"labelledcode").awaitTermination    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
-        val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
-        val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
-        val schema = new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
-        import spark.spark.implicits._
-        import org.apache.spark.sql.functions._
-        val UserCode:Dataset[Row] = CodeCleaner.cleanCode(StringDF.select(from_json(col("value"),schema).as("data")).select("data.*"),"code","cleanedCode")
-
-        val newpredictions:Dataset[Row] = clusClass.ClassifyCode(UserCode)
-
-        newpredictions.writeStream.format("console").outputMode("append").start()
-
-        newpredictions.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").  //casting ?? TODO control
-            writeStream.
-            format("kafka").
-            option("kafka.bootstrap.servers", "kafka:9092").
-            option("topic", "test").
-            start().
-            awaitTermination()
+        //newpredictions.writeStream.format("console").outputMode("append").start()
+//
+        //newpredictions.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").  //casting ?? TODO control
+        //    writeStream.
+        //    format("kafka").
+        //    option("kafka.bootstrap.servers", "kafka:9092").
+        //    option("topic", "test").
+        //    start().
+        //    awaitTermination()
+        //TESTING
         //val repositoriesTyped = newpredictions.select(col("url"),col("owner"), col("stars"),col("prediction").cast(IntegerType).as("label")).as[repositorieClassified]
         
+        println("this should not be printed")
 
     } catch {
-        case e:Exception=>{spark.stop()}
+        case e:Exception=>{
+            ClassifierLogger.printError("Error in main",e)
+            spark.stop()
+        }
     }
 }
