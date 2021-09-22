@@ -12,7 +12,10 @@ object  CodeCleaner {
     val symbols = Source.fromFile(symbolFile).getLines.mkString.split("[ ,.\"]").filter((str)=> !str.isEmpty)
 
     def cleanCodeString(str:String):String = {
-        str.split("[ ,.\"();{}]").filter((str)=> !str.isEmpty && symbols.contains(str)).mkString(" ")
+        if(str != null)
+            str.split("[ ,.\"();{}]").filter((str)=> !str.isEmpty && symbols.contains(str)).mkString(" ")
+        else
+            str
     }
 
     val cleaner = udf((code:String)=> {
@@ -20,9 +23,9 @@ object  CodeCleaner {
     })
 
     def cleanCode(data:Dataset[Row],colName:String,cleanedColName:String):Dataset[Row] = {
-        if(data.isStreaming ){//&& data.writeStream.format("console").outputMode("append").start().lastProgress.numInputRows == 0){
-            return data.withColumn(cleanedColName,data(colName))    //for now, no cleaning on streaming data because kafka streaming arises a lot of problems with udfs
-        }
+        //if(data.isStreaming ){//&& data.writeStream.format("console").outputMode("append").start().lastProgress.numInputRows == 0){
+        //    return data.withColumn(cleanedColName,data(colName))    //for now, no cleaning on streaming data because kafka streaming arises a lot of problems with udfs
+        //}
         if(!data.isStreaming && data.isEmpty){
             ClassifierLogger.printWarning("code cleaner on an empty dataset")    //PROBLEMS WITH STREAMING DATA
             return data
