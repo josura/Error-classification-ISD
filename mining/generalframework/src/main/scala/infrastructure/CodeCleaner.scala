@@ -19,11 +19,11 @@ object  CodeCleaner {
         cleanCodeString(code)
     })
 
-    def cleanCode(data:Dataset[Row],colName:String,cleanedColName:String,streaming:Boolean=false):Dataset[Row] = {
-        if(streaming){
+    def cleanCode(data:Dataset[Row],colName:String,cleanedColName:String):Dataset[Row] = {
+        if(data.isStreaming ){//&& data.writeStream.format("console").outputMode("append").start().lastProgress.numInputRows == 0){
             return data.withColumn(cleanedColName,data(colName))    //for now, no cleaning on streaming data because kafka streaming arises a lot of problems with udfs
         }
-        if(!streaming && data.isEmpty){
+        if(!data.isStreaming && data.isEmpty){
             ClassifierLogger.printWarning("code cleaner on an empty dataset")    //PROBLEMS WITH STREAMING DATA
             return data
         }

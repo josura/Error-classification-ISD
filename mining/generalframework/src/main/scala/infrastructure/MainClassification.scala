@@ -70,8 +70,9 @@ object MainClassification extends App{
         
         val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
 
-        val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode").awaitTermination()    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
+        val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
         
+        spark.spark.streams.awaitAnyTermination()
         // TESTING
         //val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
         //val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
