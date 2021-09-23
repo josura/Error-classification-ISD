@@ -1,0 +1,135 @@
+version: "3.1"
+
+services:
+    elastic-search:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        networks:
+            - entomomachia
+        environment:
+            - discovery.type=single-node
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+    kibana: 
+        image: docker.elastic.co/kibana/kibana:7.7.0
+        networks: 
+            - entomomachia
+        environment: 
+            SERVER_NAME: kibana
+            ELASTICSEARCH_HOSTS: http://elastic-search:9200
+        ports:
+            - "5601:5601"
+    #zoo:
+    #    image: confluentinc/cp-zookeeper:latest
+    #    networks:
+    #        - entomomachia
+    #    restart: unless-stopped
+    #    hostname: zoo
+    #    ports:
+    #        - "2181:2181"
+    #kafka:
+    #    image: confluentinc/cp-kafka:latest
+    #    networks:
+    #        - entomomachia
+    #    environment:
+    #        - KAFKA_ZOOKEEPER_CONNECT=zoo:2181
+    #        - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092, LISTENER_LOCALHOST://localhost:29092
+    #        - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,LISTENER_LOCALHOST:PLAINTEXT
+    #        - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    #    depends_on:
+    #        - zoo
+    #    ports:
+    #        - "9092:9092"
+    #        - "29092:29092"
+
+    #TESTING
+    zookeeper:
+        image: confluentinc/cp-zookeeper:latest
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        ports:
+            - 22181:2181
+        networks:
+            - entomomachia
+    
+    kafka:
+        image: confluentinc/cp-kafka:latest
+        depends_on:
+            - zookeeper
+        ports:
+            - 29092:29092
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        networks:
+            - entomomachia
+    kafka-manager:
+        image: sheepkiller/kafka-manager:latest
+        environment:
+          ZK_HOSTS: "zookeeper:2181"
+        ports:
+          - "9000:9000"
+        networks:
+          - entomomachia
+
+    general-classifier:
+        build: mining/generalframework
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./mining/data:/opt/data/
+            - ./logs:/opt/logs/
+            - ./mining/generalframework:/opt/generalframework
+    access-control:
+        build: backend/accessControl
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./logs:/opt/logs/
+            - ./backend/accessControl:/opt/accessControl
+    
+    kafkacat:
+        image: confluentinc/cp-kafkacat:5.0.0
+        stdin_open: true 
+        tty: true
+        networks: 
+            - entomomachia
+    mongo:
+        image: mongo
+        restart: always
+        ports:
+          - 2701:2701
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: access
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+          - 8081:8081
+        environment:
+          ME_CONFIG_MONGODB_ADMINUSERNAME: root
+          ME_CONFIG_MONGODB_ADMINPASSWORD: access
+
+
+networks:
+    entomomachia:
+        external: false
+
+#TESTING
+#networks:
+#    bridge:
+#      driver: bridge
+#TESTING
+
+volumes:
+    permanentdata: 
