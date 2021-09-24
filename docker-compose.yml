@@ -3,6 +3,7 @@ version: "3"
 services:
     elastic-search:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.7.0
+        restart: unless-stopped
         networks:
             - entomomachia
         environment:
@@ -21,6 +22,7 @@ services:
             - "5601:5601"
     zookeeper:
         image: confluentinc/cp-zookeeper:latest
+        restart: unless-stopped
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
@@ -31,6 +33,7 @@ services:
     
     kafka:
         image: confluentinc/cp-kafka:latest
+        restart: unless-stopped
         depends_on:
             - zookeeper
         ports:
@@ -81,7 +84,7 @@ services:
             - entomomachia
     mongo:
         image: mongo
-        restart: always
+        restart: unless-stopped
         ports:
           - 2701:2701
         environment:
@@ -89,7 +92,7 @@ services:
           MONGO_INITDB_ROOT_PASSWORD: access
     mongo-express:
         image: mongo-express
-        restart: always
+        restart: unless-stopped
         ports:
           - 8081:8081
         environment:
