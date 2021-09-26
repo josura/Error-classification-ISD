@@ -108,7 +108,7 @@ services:
             - ./logs:/opt/logs/
             - ./backend/elasticInterface/server:/opt/server
         ports:
-            - 5000:5000
+            - 1099:1099
 
 
 networks:
