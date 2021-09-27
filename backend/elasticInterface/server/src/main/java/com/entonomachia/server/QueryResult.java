@@ -2,28 +2,50 @@ package com.entonomachia.server;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import org.elasticsearch.search.SearchHit;
+
+//TODO this class is only for one document, but the query returns a number of documents, so It needs to be changed
 public class QueryResult implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	public String jsonRes;
-	public String code;
-	public String user;
-	public String group;
-	public String errorLabel;
-	public String mutantLabel;
-
+	public List<String> listJsonRes;
+	public List<Map<String,Object>> listMapRes;
+	
+	public QueryResult() {
+		listJsonRes = new ArrayList<String>();
+		listMapRes = new ArrayList<Map<String,Object>>();
+	}
+	
 	public void readJson(String json) {
 		jsonRes=json;
 		//TODO unmarshalling
 	}
 	
+	public void addJson(String json) {
+		listJsonRes.add(json);
+		//TODO from json to Map
+	}
+	
+	public void addMap(Map<String, Object> map) {
+		listMapRes.add(map);
+	}
+	
+	public void addDocument(SearchHit hit) {
+		listJsonRes.add(hit.getSourceAsString());
+		listMapRes.add(hit.getSourceAsMap());
+	}
+	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return jsonRes;
+		// The map is the same as the list of json
+		return jsonRes + "\n" + String.join(",\n", listJsonRes);
 	}
 	
 
