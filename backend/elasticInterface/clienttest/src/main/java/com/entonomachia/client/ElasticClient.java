@@ -1,5 +1,6 @@
 package com.entonomachia.client;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -16,12 +17,16 @@ public class ElasticClient {
 		try {
 			//ElFac = (ElasticInterface)Naming.lookup("//elastic-facade-server/ElasticFacade");
 			ElFac = (ElasticInterface)Naming.lookup("//localhost/ElasticFacade");
-			System.out.println(ElFac.getResult());
+			//ElFac.findCodeByLabelErrorSync(14.0);
+			//System.out.println(ElFac.getResult());
+			System.out.println(ElFac.findCodeByUserSyncString("user"));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch(RemoteException e) {
 			e.printStackTrace();
 		} catch(NotBoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

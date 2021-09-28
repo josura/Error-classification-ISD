@@ -8,7 +8,7 @@ COPY entrypoint.sh ./entrypoint.sh
 
 COPY pom.xml pom.xml
 
-RUN mvn package
+RUN mvn compile
 
 #RUN --mount=type=cache,target=/root/.m2  mvn clean package -Dmaven.test.skip
 
@@ -33,6 +33,6 @@ RUN mvn package
 #         -Djava.security.egd=file:/dev/./urandom \
 #         foo.bar.MySpringBootApplication
 
-#CMD [ "/bin/bash" ]
+CMD [ "/bin/bash" ]
 
-ENTRYPOINT [ "/bin/sh" , "entrypoint.sh" ]
+#ENTRYPOINT [ "/bin/sh" , "entrypoint.sh" ]
