@@ -5,14 +5,13 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class QueryResultTest {
-	QueryResult testRes;
-	String testJson;
+public class ElasticInterfaceTest {
+	String jsonTest;
+	
 	@Before
 	public void setUp() throws Exception {
-		testRes = new QueryResult();
-		testJson = "{\n"
-				+ "    \"took\": 22,\n"
+		jsonTest = "{\n"
+				+ "    \"took\": 3,\n"
 				+ "    \"timed_out\": false,\n"
 				+ "    \"_shards\": {\n"
 				+ "        \"total\": 1,\n"
@@ -52,16 +51,7 @@ public class QueryResultTest {
 				+ "    }\n"
 				+ "}";
 	}
-
-	@Test
-	public void testQueryResultDefaultValue() {
-		assertEquals(testRes.toString() , "placeholder");
-	}
-
-	@Test
-	public void testReadJsonPartial() {
-		testRes.readJson(testJson);
-		assertTrue(testRes.fullDoc.getHits().getHits().get(0).getSource().getLabelError() == 1.0);
-	}
-
+	
+	
+	
 }
