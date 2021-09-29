@@ -8,6 +8,8 @@
   
 	<properties>
 		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<exec.mainClass>com.entonomachia.server.ElasticServer</exec.mainClass>
 	</properties>
 	
 	<dependencies>
@@ -29,18 +31,60 @@
 	    <version>2.0.2-beta</version>
 	    <scope>test</scope>
 	</dependency>
+<!-- 	<dependency> -->
+<!-- 	    <groupId>org.elasticsearch.client</groupId> -->
+<!-- 	    <artifactId>elasticsearch-rest-high-level-client</artifactId> -->
+<!-- 	    <version>7.15.0</version> -->
+<!-- 	</dependency> -->
+<!--     <dependency> -->
+<!-- 	    <groupId>org.elasticsearch</groupId> -->
+<!-- 	    <artifactId>elasticsearch</artifactId> -->
+<!-- 	    <version>7.6.2</version> -->
+<!-- 	</dependency> -->
 	<dependency>
 	    <groupId>org.elasticsearch.client</groupId>
-	    <artifactId>elasticsearch-rest-high-level-client</artifactId>
+	    <artifactId>elasticsearch-rest-client</artifactId>
 	    <version>7.15.0</version>
 	</dependency>
-    <dependency>
-	    <groupId>org.elasticsearch</groupId>
-	    <artifactId>elasticsearch</artifactId>
-	    <version>7.6.2</version>
+<!-- 	for unmarshalling -->
+	 <dependency>
+	  <groupId>com.google.code.gson</groupId>
+	  <artifactId>gson</artifactId>
+	  <version>2.8.8</version>
 	</dependency>
-  </dependencies>
+	 <dependency>
+	 	<groupId>org.apache.httpcomponents</groupId>
+	 	<artifactId>httpcore</artifactId>
+	 	<version>4.4.14</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>org.apache.httpcomponents</groupId>
+	 	<artifactId>httpclient</artifactId>
+	 	<version>4.5.13</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>org.apache.httpcomponents</groupId>
+	 	<artifactId>httpcore-nio</artifactId>
+	 	<version>4.4.14</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>org.apache.httpcomponents</groupId>
+	 	<artifactId>httpasyncclient</artifactId>
+	 	<version>4.1.4</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>commons-codec</groupId>
+	 	<artifactId>commons-codec</artifactId>
+	 	<version>1.15</version>
+	 </dependency>
+	 <dependency>
+	 	<groupId>commons-logging</groupId>
+	 	<artifactId>commons-logging</artifactId>
+	 	<version>1.2</version>
+	 </dependency>
+	</dependencies>
 
+	
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
@@ -53,10 +97,16 @@
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.0.2</version>
+          <configuration>
+				<encoding>UTF-8</encoding>
+          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.0</version>
+          <configuration>
+		     <release>11</release>
+		  </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-surefire-plugin</artifactId>
@@ -89,6 +139,38 @@
         <plugin>
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
+        </plugin>
+<!--         shading elastic dependencies -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.1.0</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals><goal>shade</goal></goals>
+                    <configuration>
+                        <relocations>
+                            <relocation>
+                                <pattern>org.apache.http</pattern>
+                                <shadedPattern>hidden.org.apache.http</shadedPattern>
+                            </relocation>
+                            <relocation>
+                                <pattern>org.apache.logging</pattern>
+                                <shadedPattern>hidden.org.apache.logging</shadedPattern>
+                            </relocation>
+                            <relocation>
+                                <pattern>org.apache.commons.codec</pattern>
+                                <shadedPattern>hidden.org.apache.commons.codec</shadedPattern>
+                            </relocation>
+                            <relocation>
+                                <pattern>org.apache.commons.logging</pattern>
+                                <shadedPattern>hidden.org.apache.commons.logging</shadedPattern>
+                            </relocation>
+                        </relocations>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
       </plugins>
     </pluginManagement>

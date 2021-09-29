@@ -1,0 +1,143 @@
+package com.entonomachia.server;
+
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class ElasticInterfaceImplDTO extends UnicastRemoteObject implements ElasticInterface {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2217960169529312921L;
+
+	protected ElasticInterfaceImplDTO() throws RemoteException {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+//	@Override
+	public void setResult(QueryResultDTO res) throws RemoteException {
+		// TODO Auto-generated method stub
+
+	}
+
+//	@Override
+	public QueryResultDTO getResult() throws RemoteException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String findCodeByUserSyncString(String user) throws IOException, RemoteException {
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"user\" : \"" + user +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		return responseJson;
+	}
+
+	@Override
+	public String findCodeByGroupSyncString(String group) throws IOException, RemoteException {
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"group\" : \"" + group +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		return responseJson;
+	}
+
+	@Override
+	public String findCodeByLabelErrorSyncString(Double label) throws IOException, RemoteException {
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match\": {\n"
+		        + "      \"labelError\" : " + label +  "\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		return responseJson;
+	}
+
+	@Override
+	public String findCodeByLabelMutantSyncString(Double label) throws IOException, RemoteException {
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match\": {\n"
+		        + "      \"labelMutant\" : " + label +  "\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		return responseJson;
+	}
+
+	@Override
+	public QueryResultDTO findCodeByUserSync(String user) throws IOException, RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"user\" : \"" + user +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+
+	@Override
+	public QueryResultDTO findCodeByGroupSync(String group) throws IOException, RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"group\" : \"" + group +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+
+	@Override
+	public QueryResultDTO findCodeByLabelErrorSync(Double label) throws IOException, RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"labelError\" : \"" + label +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+
+	@Override
+	public QueryResultDTO findCodeByLabelMutantSync(Double label) throws IOException, RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/",
+		        "{\n"
+		        + "  \"query\": {\n"
+		        + "    \"match_phrase\": {\n"
+		        + "      \"label\" : \"" + label +  "\"\n"
+		        + "    }\n"
+		        + "  }\n"
+		        + "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+
+}

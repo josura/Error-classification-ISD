@@ -1,10 +1,7 @@
 package com.entonomachia.client;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 import com.entonomachia.server.ElasticInterface;
 
@@ -15,20 +12,17 @@ public class ElasticClient {
 	
 	public static void main(String[] args) {
 		try {
-			//ElFac = (ElasticInterface)Naming.lookup("//elastic-facade-server/ElasticFacade");
-			ElFac = (ElasticInterface)Naming.lookup("//localhost/ElasticFacade");
+			System.setProperty("java.rmi.server.hostname","elastic-facade-server");
+			//ElFac = (ElasticInterface)Naming.lookup("ElasticFacade");
+			Registry reg=LocateRegistry.getRegistry("elastic-facade-server",1099);
+			ElFac = (ElasticInterface)reg.lookup("ElasticFacade");
+			//ElFac = (ElasticInterface)Naming.lookup("//localhost/ElasticFacade");
 			//ElFac.findCodeByLabelErrorSync(14.0);
 			//System.out.println(ElFac.getResult());
 			System.out.println(ElFac.findCodeByUserSyncString("user"));
-		} catch (MalformedURLException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
-		} catch(RemoteException e) {
-			e.printStackTrace();
-		} catch(NotBoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} 
 	}
 
 }

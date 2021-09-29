@@ -1,10 +1,8 @@
 # syntax=docker/dockerfile:experimental
 
 ########Maven build stage########
-FROM maven:3.6-jdk-11 as maven_build
-WORKDIR /opt/server
-
-COPY entrypoint.sh ./entrypoint.sh
+FROM maven:3.8.2-jdk-11
+WORKDIR /opt/client
 
 COPY pom.xml pom.xml
 
