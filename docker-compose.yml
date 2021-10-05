@@ -114,7 +114,7 @@ services:
         ports:
             - 1099:1099
     #TESTING
-    pippo-client:
+    elatic-facade-client:
         build: backend/elasticInterface/clienttest
         networks: 
             - entomomachia

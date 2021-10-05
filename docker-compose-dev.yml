@@ -123,6 +123,28 @@ services:
           ME_CONFIG_MONGODB_ADMINUSERNAME: root
           ME_CONFIG_MONGODB_ADMINPASSWORD: access
 
+    elastic-facade-server:
+        build: backend/elasticInterface/server
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./logs:/opt/logs/
+            - ./backend/elasticInterface/server:/opt/server
+        ports:
+            - 1099:1099
+
+    elatic-facade-client:
+        build: backend/elasticInterface/clienttest
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./logs:/opt/logs/
+            - ./backend/elasticInterface/clienttest:/opt/client
+
 
 networks:
     entomomachia:
