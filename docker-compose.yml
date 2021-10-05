@@ -113,16 +113,6 @@ services:
             - ./backend/elasticInterface/server:/opt/server
         ports:
             - 1099:1099
-    #TESTING
-    elatic-facade-client:
-        build: backend/elasticInterface/clienttest
-        networks: 
-            - entomomachia
-        environment:
-            - DOCKER_RUNNING=true
-        volumes:
-            - ./logs:/opt/logs/
-            - ./backend/elasticInterface/clienttest:/opt/client
 
 
 networks:
