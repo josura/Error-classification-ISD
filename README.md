@@ -1,15 +1,28 @@
 # (Entomomachia) Error-classification-ISD
+The aim of this project is to implement a complex distributed architecture with microservices to build an interface that could be used by a user to share some **code** and get predictions of **errors** and **mutations** based on the code of common repositories from (defect4j-dissection)[https://github.com/program-repair/defects4j-dissection].
+
+The prediction is done by a neural network (multilayer perceptrons) in the Spark framework, the model is trained with the data from defect4j, the resultant predictions are a vector of feature for the code and 2 labels(one label for errors, 1 label for mutations). 
+Code with the same label is deemed similar by the framework and will be returned to end users as possible Errors or Mutations.
+
+The application exposes a web interface(for normal users) and some client API(REST) 
+
 This project was built for a course at university (engineering of distributed systems).
 
+Technologies used in this project:
+> - (Elasticsearch)[https://www.elastic.co/] as a repository for useful and labelled code and errors.
+> - (Spark)[https://spark.apache.org/] as the main classification framework and backend behind the prediction
+> - (Spring Framework)[https://www.google.com/search?client=firefox-b-d&q=spring] as the main component for the web server and the backend for communication between end users and prediction framework
+> - (Kafka)[https://www.confluent.io/what-is-apache-kafka/?utm_medium=sem&utm_source=google&utm_campaign=ch.sem_br.nonbrand_tp.prs_tgt.kafka_mt.xct_rgn.emea_lng.eng_dv.all_con.kafka-general&utm_term=kafka&creative=&device=c&placement=&gclid=CjwKCAjw7--KBhAMEiwAxfpkWI5WuMmACbZnsIRBemzfwiqFWKfgoY9WfTjr2mPf2p7OdkaOvl1AFhoCdbIQAvD_BwE] as the messaging and event system that makes the whole project event driven.
+> - (Docker)[https://www.docker.com/] and (Docker-compose)[https://docs.docker.com/compose/] to simply create microservices, orchestrate the whole project and make It Scalable.
 
 ## IMPLEMENTED
 > - Classification framework for errors and mutations based on code passed on input
 > - receiving and sending streaming data from kafka, to kafka(to revise after Client and REST API backend is done)
+> - Querying elasticsearch and create a remote facade as an interface to the queries(other queries could be added, especially for ignoring users of other organizations).
 
 ## TODOs
-> - Classification of stream data
-> - Communication framework with kafka
-> - Access control for users with different roles (access to certain code, access to all code for admins)
+> - Communication framework with kafka, client side
+> - Access control for users with different roles (access to certain code, access to all code for admins, implement the queries in elasticsearch and this should be done)
 > - Tracing
 > - logging analysis by passing logs in ElasticSearch and visualizing them in Kibana (controlling logs file and passing new logs everytime the logfile gets written)
 > - REST APIs
