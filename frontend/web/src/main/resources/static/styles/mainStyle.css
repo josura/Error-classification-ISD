@@ -1,0 +1,11 @@
+#entoHeader {
+  background-color: lightblue;
+  color: black;
+  padding: 40px;
+  text-align: center;
+}
+
+#logoImage {
+  border-radius: 50%;
+  width: 200px;
+}
