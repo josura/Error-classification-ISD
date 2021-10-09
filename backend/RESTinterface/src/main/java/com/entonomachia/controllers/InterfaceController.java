@@ -2,6 +2,10 @@ package com.entonomachia.controllers;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.IdGenerator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +18,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entonomachia.domains.CodeToBeClassified;
+import com.entonomachia.services.KafkaConsumer;
+import com.entonomachia.services.KafkaProducer;
 
 @RestController
 @RequestMapping("/")
 public class InterfaceController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceController.class);
+	
+	@Autowired
+	KafkaConsumer kafCons;
+
+	@Autowired
+	KafkaProducer kafProd;
+	
+	@Autowired
+	IdGenerator idGen;
+	
 	@GetMapping("")
 	public @ResponseBody String getUserGroupRepo (
 			@RequestParam String user,
@@ -30,7 +48,13 @@ public class InterfaceController {
 	
 	// CREATE
 	@PostMapping("")
-	CodeToBeClassified createAlien(@Valid @RequestBody CodeToBeClassified newAlien) {
+	CodeToBeClassified classifyCode(@Valid @RequestBody CodeToBeClassified newAlien) {
+		
+		String placeholder="";
+		//TODO Marshalling of codeToBeClassified
+		kafProd.publishToTopic(placeholder);
+		
+		//TODO fix consumer to take only the right record(the one that was sent)
 		return null;
 		//TODO
 	}

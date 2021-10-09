@@ -69,7 +69,7 @@ object Main extends App{
             writeStream.
             format("kafka").
             option("kafka.bootstrap.servers", "kafka:9092").
-            option("topic", "test").
+            option("topic", "codeLabels").
             start().
             awaitTermination
         //val repositoriesTyped = newpredictions.select(col("url"),col("owner"), col("stars"),col("prediction").cast(IntegerType).as("label")).as[repositorieClassified]
