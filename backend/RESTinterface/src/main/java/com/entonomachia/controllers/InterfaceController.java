@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.entonomachia.domains.CodeToBeClassified;
 import com.entonomachia.services.KafkaConsumer;
 import com.entonomachia.services.KafkaProducer;
+import com.entonomachia.services.RedisInterface;
 
 @RestController
 @RequestMapping("/")
@@ -34,13 +35,14 @@ public class InterfaceController {
 	KafkaProducer kafProd;
 	
 	@Autowired
-	IdGenerator idGen;
+	RedisInterface idGen;
 	
 	@GetMapping("")
 	public @ResponseBody String getUserGroupRepo (
 			@RequestParam String user,
 			@RequestParam String group) {
-		
+		//idGen.testConnection();
+		System.out.println( idGen.getNewId());
 		return "Test";
 	}
 	
