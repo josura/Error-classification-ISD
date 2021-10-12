@@ -2,6 +2,7 @@ package com.entonomachia.domains;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash("Transaction")
@@ -15,19 +16,23 @@ public class TransactionStatus implements Serializable {
         PENDING, ERROR, FINISHED
     }
 	
-	private String transactionId;
-	private Status status;
+	@Id private String id;
+	//private Status status;
+	private String status;
 	private String result;
-	public String getTransactionId() {
-		return transactionId;
+	
+	
+	
+	public String getId() {
+		return id;
 	}
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
+	public void setId(String id) {
+		this.id = id;
 	}
-	public Status getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	public void setStatus(Status status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 	public String getResult() {
@@ -35,6 +40,14 @@ public class TransactionStatus implements Serializable {
 	}
 	public void setResult(String result) {
 		this.result = result;
+	}
+	
+	@Override
+	public String toString() {
+		return "{\n" + 
+				"\t\"id\":\"" + id + "\",\n"+ 
+				"\t\"status\":\"" + status + "\",\n"+ 
+				"\t\"result\":\"" + result + "\"" + "\n}";
 	}
 	
 }

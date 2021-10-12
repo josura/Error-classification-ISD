@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entonomachia.domains.CodeToBeClassified;
+import com.entonomachia.domains.TransactionStatus;
+import com.entonomachia.repositories.TransactionRepository;
 import com.entonomachia.services.KafkaConsumer;
 import com.entonomachia.services.KafkaProducer;
 import com.entonomachia.services.RedisInterface;
@@ -37,14 +39,34 @@ public class InterfaceController {
 	@Autowired
 	RedisInterface idGen;
 	
+	@Autowired
+	TransactionRepository tranRep;
+	
 	@GetMapping("")
-	public @ResponseBody String getUserGroupRepo (
-			@RequestParam String user,
-			@RequestParam String group) {
+	public @ResponseBody String getRoot () {
 		//idGen.testConnection();
-		System.out.println( idGen.getNewId());
-		return "Test";
+		TransactionStatus tran = new TransactionStatus();
+		tran.setId("pippo1");
+		tran.setStatus("FINISHED");
+		tran.setResult("[{test=\"test\"},{test=\"visione\"}]");
+		tranRep.save(tran);
+		return tranRep.findById("pippo1").get().toString();
 	}
+	
+//	@GetMapping("")
+//	public @ResponseBody String getIdTransactionStatus (
+//			@RequestParam String id) {
+//		return tranRep.findById(id).get().toString();
+//	}
+	
+//	@GetMapping("")
+//	public @ResponseBody String getUserGroupRepo (
+//			@RequestParam String user,
+//			@RequestParam String group) {
+//		//idGen.testConnection();
+//		System.out.println( idGen.getNewId());
+//		return "Test";
+//	}
 	
 	/* CRUD OPERATIONS */
 	

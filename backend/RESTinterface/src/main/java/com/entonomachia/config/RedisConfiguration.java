@@ -34,7 +34,8 @@ public class RedisConfiguration {
     		redisStandaloneConfiguration.setHostName(host);
     		redisStandaloneConfiguration.setPort(port);
     		redisStandaloneConfiguration.setDatabase(database);
-//    		redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+    		//redisStandaloneConfiguration.setPassword(RedisPassword.of(password));
+    		//TODO settings for password
 
         	JedisClientConfiguration.JedisClientConfigurationBuilder jedisClientConfiguration = JedisClientConfiguration.builder();
     		jedisClientConfiguration.connectTimeout(Duration.ofSeconds(60));// 60s connection timeout
