@@ -123,7 +123,8 @@ services:
             - ./logs:/opt/logs/
             - ./backend/elasticInterface/clienttest:/opt/client
     rest-interface:
-        build: backend/RESTinterface
+        #build: backend/RESTinterface
+        image: docker.io/library/restinterface:0.0.1-SNAPSHOT
         networks: 
             - entomomachia
         environment:
