@@ -23,12 +23,16 @@ import com.entonomachia.repositories.TransactionRepository;
 import com.entonomachia.services.KafkaConsumer;
 import com.entonomachia.services.KafkaProducer;
 import com.entonomachia.services.RedisInterface;
+import com.google.gson.Gson;
 
 @RestController
 @RequestMapping("/")
 public class InterfaceController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceController.class);
+	
+	Gson gson = null;
+	
 	
 	@Autowired
 	KafkaConsumer kafCons;
@@ -42,11 +46,15 @@ public class InterfaceController {
 	@Autowired
 	TransactionRepository tranRep;
 	
+	public InterfaceController() {
+		gson = new Gson();
+	}
+	
 	@GetMapping("")
 	public @ResponseBody String getRoot () {
 		//idGen.testConnection();
 		TransactionStatus tran = new TransactionStatus();
-		tran.setId("pippo1");
+		tran.setId("7");
 		tran.setStatus("FINISHED");
 		tran.setResult("[{test=\"test\"},{test=\"visione\"}]");
 		tranRep.save(tran);
@@ -72,23 +80,31 @@ public class InterfaceController {
 	
 	// CREATE
 	@PostMapping("")
-	CodeToBeClassified classifyCode(@Valid @RequestBody CodeToBeClassified newAlien) {
+	String classifyCode(@Valid @RequestBody CodeToBeClassified newCode) {
 		
 		String placeholder="";
-		//TODO Marshalling of codeToBeClassified
-		kafProd.publishToTopic(placeholder);
-		
-		//TODO fix consumer to take only the right record(the one that was sent)
-		return null;
-		//TODO
+		//useless marshalling, the requestBody could be also taken as a json directly.
+		//even though, maybe the newCode could be also used to build a database of some sort or to
+		//build an authentication and authorization framework.
+		placeholder = gson.toJson(newCode);
+		kafProd.publishToTopic(placeholder);		
+
+		TransactionStatus tran = new TransactionStatus();
+		tran.setId(idGen.getNewId().toString());
+		tran.setStatus("PENDING");
+		tran.setResult("");
+		tranRep.save(tran);
+		return tran.toString();
+
 	}
 	
 	// READ
-	@GetMapping("/{user}")
-	public @ResponseBody String getUserRepositories (
+	@GetMapping("/{id}")
+	public @ResponseBody String getTransactionStatus (
 			@PathVariable String id) {
-		return null;
-		//TODO
+		if(tranRep.findById(id).isPresent())
+			return tranRep.findById(id).get().toString();
+		return "Transaction ID not found";
 	}
 	
 	// UPDATE

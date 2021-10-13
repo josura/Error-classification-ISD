@@ -122,6 +122,17 @@ services:
         volumes:
             - ./logs:/opt/logs/
             - ./backend/elasticInterface/clienttest:/opt/client
+    rest-interface:
+        build: backend/RESTinterface
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./logs:/opt/logs/
+            - ./backend/RESTinterface:/opt/RESTinterface
+        ports:
+            - 8888:8888
     
     redis:
         image: redis
