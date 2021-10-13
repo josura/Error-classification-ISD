@@ -24,6 +24,7 @@ import com.entonomachia.services.KafkaConsumer;
 import com.entonomachia.services.KafkaProducer;
 import com.entonomachia.services.RedisInterface;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @RestController
 @RequestMapping("/")
@@ -47,7 +48,7 @@ public class InterfaceController {
 	TransactionRepository tranRep;
 	
 	public InterfaceController() {
-		gson = new Gson();
+		gson = new GsonBuilder().disableHtmlEscaping().create();
 	}
 	
 	@GetMapping("")
@@ -86,6 +87,9 @@ public class InterfaceController {
 		//useless marshalling, the requestBody could be also taken as a json directly.
 		//even though, maybe the newCode could be also used to build a database of some sort or to
 		//build an authentication and authorization framework.
+		//TODO add TransactionID to the class because the final part need to know the transactionID, 
+		//or use a key-value in redis that links the ID to the transactionID, 
+		//but the client could send the same ID, so this solution is bad
 		placeholder = gson.toJson(newCode);
 		kafProd.publishToTopic(placeholder);	
 		
