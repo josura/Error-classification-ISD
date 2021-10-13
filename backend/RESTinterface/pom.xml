@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.entonomachia</groupId>
-	<artifactId>RESTinterface</artifactId>
+	<artifactId>restinterface</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RESTinterface</name>
+	<name>restinterface</name>
 	<description>REST interface, communicates with the prediction framework and the ElasticSearch repository</description>
 	<properties>
 		<java.version>11</java.version>

@@ -87,7 +87,8 @@ public class InterfaceController {
 		//even though, maybe the newCode could be also used to build a database of some sort or to
 		//build an authentication and authorization framework.
 		placeholder = gson.toJson(newCode);
-		kafProd.publishToTopic(placeholder);		
+		kafProd.publishToTopic(placeholder);	
+		
 
 		TransactionStatus tran = new TransactionStatus();
 		tran.setId(idGen.getNewId().toString());
