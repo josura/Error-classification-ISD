@@ -12,13 +12,8 @@ class KafkaEventConsumer(val _spark:SparkFacade) extends EventConsumer(_spark){ 
       ClassifierLogger.printInfo("Consuming kafka events from topic " + topics)
       val fulldf = spark.sparkReadStreamKafka(topics)
       val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
-      //TESTING
-      //val consoleStreamfirst = spark.sparkWriteStreamConsole(StringDF)
-      //TESTING
       val userCodeNotCleaned = StringDF.select(from_json(col("value"),schema).as("data")).select("data.*")
-      //TESTING
-      val consoleStreamsecond = spark.sparkWriteStreamConsole(userCodeNotCleaned)
-      //TESTING
+
       //if(!userCodeNotCleaned("code").isNotNull){
         //ClassifierLogger.printWarning("unmarshalling of stream data has returned null")
         //throw new RuntimeException("unmarshalling of stream data has returned null values")
