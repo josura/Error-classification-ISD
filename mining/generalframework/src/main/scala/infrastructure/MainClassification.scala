@@ -47,11 +47,14 @@ object MainClassification extends App{
 
         // receiving streming data from kafka from the client
         //TESTING
-        val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
-        val consoleStreamfirst = spark.sparkWriteStreamConsole(fulldf)
+        //val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
+        //val consoleStreamfirst = spark.sparkWriteStreamConsole(fulldf)
         //TESTING
         val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
-        val schema=new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
+        val schema=new StructType().
+            //add("ids",IntegerType).
+            add("ids",StringType).
+            add("user",StringType).add("group",StringType).add("code",StringType)
         val newCode = kafkaStreamingReceiver.Consume("usercode",schema)
 
         val consoleStreamafter = spark.sparkWriteStreamConsole(newCode)
@@ -59,7 +62,7 @@ object MainClassification extends App{
         newCode.printSchema()
         val newpredictions:Dataset[Row] = clusClass.ClassifyCode(newCode,streaming = true)
         newpredictions.printSchema()   //newpredictions could be changed like sendedClassified because the unmarshalling of json data in a java object could be bad for arrays or vectors
-        val consoleStream = spark.sparkWriteStreamConsole(newpredictions)//.awaitTermination()  //TODO refactor in  console event class
+        //val consoleStream = spark.sparkWriteStreamConsole(newpredictions)//.awaitTermination()  //TODO refactor in  console event class
 
         //val kafkaSendedClassified = newpredictions.select(col("ids"),col("code"),col("user"),col("group"),
         //                                                col("labelError"),
@@ -68,7 +71,7 @@ object MainClassification extends App{
 
         val kafkaSendedClassified = newpredictions.select(col("ids"),concat(newpredictions("labelError"),lit(" "),newpredictions("labelMutation")).as("labels"))
         
-        val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
+        //val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
 
         val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
         

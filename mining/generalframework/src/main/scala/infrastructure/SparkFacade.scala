@@ -82,7 +82,9 @@ class SparkFacade(appName:String) {
 
     def sparkWriteStreamConsole(data:Dataset[Row]):StreamingQuery = {
         if(started) sparkInit()
-        data.writeStream.format("console").outputMode("append").start()
+        data.writeStream.format("console").
+            option("truncate", false).     //TODO remove it or comment it
+            outputMode("append").start()
     }
 
     def stop():Unit = {
