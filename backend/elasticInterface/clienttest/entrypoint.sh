@@ -1,2 +1,3 @@
 mvn package
-java -jar target/elastic-client-interface-0.0.1-SNAPSHOT.jar
+#java -jar target/elastic-client-interface-0.0.1-SNAPSHOT.jar
+mvn exec:java

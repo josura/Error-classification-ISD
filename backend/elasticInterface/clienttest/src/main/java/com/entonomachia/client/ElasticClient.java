@@ -13,13 +13,15 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import com.entonomachia.server.ElasticInterface;
 import com.entonomachia.server.QueryResultDTO;
 
+import redis.clients.jedis.Jedis;
+
 
 //this class will not be used but will be used as template in the spring backend application
 public class ElasticClient {
 	private static ElasticInterface ElFac;
 	
 	public static void main(String[] args) {
-		
+		System.out.println("Starting orchestrator...");
 		//Kafka consumer properties
 		Properties props = new Properties();
 		props.put("bootstrap.servers", "kafka:9092");
@@ -32,8 +34,13 @@ public class ElasticClient {
 		props.put("value.deserializer", 
 	         "org.apache.kafka.common.serialization.StringDeserializer");
 		
+		System.out.println("Creating Kafka consumer ");
 		KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+		System.out.println("Kafka consumer created");
 		
+		Jedis jedis = new Jedis("redis", 6379);
+	    //jedis.auth("password");   //right now the redis repository does not have a password, TODO?
+    	System.out.println("Redis connection returns " + jedis.ping());
 		try {
 			  //RMI client to elastic-interface setup
 			  System.setProperty("java.rmi.server.hostname","elastic-facade-server");
@@ -50,7 +57,11 @@ public class ElasticClient {
 		            for (ConsumerRecord<String, String> record : records) {
 		                System.out.printf("offset = %d, key = %s, value = %s\n", 
 		            		   record.offset(), record.key(), record.value());
-
+//		                jedis.hset("Transaction:numerochiave", "id", "valore");
+//		                jedis.hset("Transaction:numerochiave", "status", "valore");
+//		                jedis.hset("Transaction:numerochiave", "result", "valore");
+//		        		
+		                
 			   			System.out.println(ElFac.findCodeByUserSyncString("user"));
 			   			QueryResultDTO res = ElFac.findCodeByLabelErrorSync(40.0);
 			   			System.out.println(res.code[0]);

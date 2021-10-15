@@ -113,7 +113,7 @@ services:
             - ./backend/elasticInterface/server:/opt/server
         ports:
             - 1099:1099
-    elatic-facade-client:
+    elastic-facade-client:
         build: backend/elasticInterface/clienttest
         networks: 
             - entomomachia
