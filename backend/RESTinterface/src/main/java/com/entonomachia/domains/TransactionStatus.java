@@ -19,7 +19,8 @@ public class TransactionStatus implements Serializable {
 	@Id private String id;
 	//private Status status;
 	private String status;
-	private String result;
+	private String resultError;
+	private String resultMutation;
 	
 	
 	
@@ -35,11 +36,18 @@ public class TransactionStatus implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public String getResult() {
-		return result;
+	public String getResultError() {
+		return resultError;
 	}
-	public void setResult(String result) {
-		this.result = result;
+	public void setResultError(String result) {
+		this.resultError = result;
+	}
+	
+	public String getResultMutation() {
+		return resultMutation;
+	}
+	public void setResultMutation(String result) {
+		this.resultMutation = result;
 	}
 	
 	@Override
@@ -47,7 +55,8 @@ public class TransactionStatus implements Serializable {
 		return "{\n" + 
 				"\t\"id\":\"" + id + "\",\n"+ 
 				"\t\"status\":\"" + status + "\",\n"+ 
-				"\t\"result\":\"" + result + "\"" + "\n}";
+				"\t\"resultError\":\"" + resultError + "\"" + "\n}"+ 
+				"\t\"resultMutation\":\"" + resultMutation + "\"" + "\n}";
 	}
 	
 }

@@ -11,6 +11,7 @@ public class QueryResultDTO implements Serializable{
 	private static final long serialVersionUID = -7200475353812708410L;
 	
 	public String fullJson;
+	public String onlyHitsJson;
 	public Integer[] ids;
 	public String[] code;
 	public String[] solution;

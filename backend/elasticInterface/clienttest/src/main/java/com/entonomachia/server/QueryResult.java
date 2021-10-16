@@ -53,6 +53,7 @@ public class QueryResult implements Serializable {
 	public QueryResultDTO toDTO() {
 		QueryResultDTO res = new QueryResultDTO();
 		res.fullJson = fullJsonRes;
+		res.onlyHitsJson = JsonHandler.generalToJson(fullDoc.getHits().getHits());
 		res.code = new String[listRes.size()];
 		res.featureString = new String[listRes.size()];
 		res.group = new String[listRes.size()];

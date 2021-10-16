@@ -54,12 +54,13 @@ public class InterfaceController {
 	@GetMapping("")
 	public @ResponseBody String getRoot () {
 		//idGen.testConnection();
-		TransactionStatus tran = new TransactionStatus();
-		tran.setId("7");
-		tran.setStatus("FINISHED");
-		tran.setResult("[{test=\"test\"},{test=\"visione\"}]");
-		tranRep.save(tran);
-		return tranRep.findById("pippo1").get().toString();
+//		TransactionStatus tran = new TransactionStatus();
+//		tran.setId("7");
+//		tran.setStatus("FINISHED");
+//		tran.setResult("[{test=\"test\"},{test=\"visione\"}]");
+//		tranRep.save(tran);
+//		TODO create a simple homepage
+		return "ENTONOMACHIA REST API";
 	}
 	
 //	@GetMapping("")
@@ -90,14 +91,17 @@ public class InterfaceController {
 		//TODO add TransactionID to the class because the final part need to know the transactionID, 
 		//or use a key-value in redis that links the ID to the transactionID, 
 		//but the client could send the same ID, so this solution is bad
+		String newId = idGen.getNewId().toString();
+		newCode.setIds(newId);
 		placeholder = gson.toJson(newCode);
 		kafProd.publishToTopic(placeholder);	
 		
 
 		TransactionStatus tran = new TransactionStatus();
-		tran.setId(idGen.getNewId().toString());
+		tran.setId(newId);
 		tran.setStatus("PENDING");
-		tran.setResult("");
+		tran.setResultError("");
+		tran.setResultMutation("");
 		tranRep.save(tran);
 		return tran.toString();
 

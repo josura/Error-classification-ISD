@@ -1,13 +1,18 @@
 package com.entonomachia.unmarshalling;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
 //TODO controls over the schema of the json
 public class JsonHandler {
 	static Gson gson;
 	static {
-		gson = new Gson();
+		gson = new GsonBuilder().disableHtmlEscaping().create();
+	}
+	
+	public static String generalToJson(Object gen) {
+		return gson.toJson(gen);
 	}
 	
 	public static DocumentUnmarshalled jsonToDocument(String json) {

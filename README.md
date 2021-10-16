@@ -19,10 +19,16 @@ Technologies used in this project:
 > - Classification framework for errors and mutations based on code passed on input
 > - receiving and sending streaming data from kafka, to kafka(to revise after Client and REST API backend is done)
 > - Querying elasticsearch and create a remote facade as an interface to the queries(other queries could be added, especially for ignoring users of other organizations).
+> - REST APIs
+> - Communication framework with kafka, client side, switched with a request-responce pattern to decouple the client request and the whole backbone, the request are now done with transactions registered in redis, when the whole computation of possible errors and mutation has finished, the result are written to redis.
 
 ## TODOs
-> - Communication framework with kafka, client side
+> - Tests for almost everything
+> - Propagation of errors through the transaction status
 > - Access control for users with different roles (access to certain code, access to all code for admins, implement the queries in elasticsearch and this should be done)
+> - WEB interface(It was in production but the backbone was more important)
 > - Tracing
 > - logging analysis by passing logs in ElasticSearch and visualizing them in Kibana (controlling logs file and passing new logs everytime the logfile gets written)
-> - REST APIs
+> - Better error handling
+> - Better logging
+> - Aspects logging

@@ -1,7 +1,7 @@
 package com.entonomachia.domains;
 
 public class CodeToBeClassified {
-	private String ids;
+	private String ids="default";
 	private String user;
 	private String group;
 	private String code;

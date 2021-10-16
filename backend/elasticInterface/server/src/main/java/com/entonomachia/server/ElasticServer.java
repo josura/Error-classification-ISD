@@ -18,8 +18,8 @@ public class ElasticServer{
 			//QueryResult res = new QueryResult();
 			//res.readJson("{\"ids\":1,\"user\":\"GIORGIO\",\"group\":\"SELF\",\"code\":\"if(testing=false){String goodbye = \\\"\\\";}\"}");
 			//exported.setResult(res);
-			String teststr = exported.findCodeByLabelMutantSyncString(14.0);
-			System.out.println(teststr);
+//			String teststr = exported.findCodeByLabelMutantSyncString(14.0);
+//			System.out.println(teststr);
 			//TESTING
 			Registry rgsty =  LocateRegistry.createRegistry(1099);
 			System.out.println("Opening the connection to the interface");
