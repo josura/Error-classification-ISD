@@ -20,5 +20,7 @@ public interface ElasticInterface extends Remote {
 //	public QueryResult findCodeByGroupSync(String group) throws IOException,RemoteException;
 //	public QueryResult findCodeByLabelErrorSync(Double label) throws IOException,RemoteException;
 //	public QueryResult findCodeByLabelMutantSync(Double label) throws IOException,RemoteException;
+	public String findCodeByLabelErrorCredentialsSyncString(Double label,String user, String group) throws IOException,RemoteException;
+	public String findCodeByLabelMutantCredentialsSyncString(Double label,String user, String group) throws IOException,RemoteException;
 	
 }
