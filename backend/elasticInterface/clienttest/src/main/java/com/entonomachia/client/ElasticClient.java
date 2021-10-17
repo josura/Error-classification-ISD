@@ -66,12 +66,15 @@ public class ElasticClient {
 	                String[] labels = labelsString.split(" ");
 	                Double labelError = Double.parseDouble(labels[0]);
 	                Double labelMutation = Double.parseDouble(labels[1]);
-		                
+		            String user = labels[2];
+		            String group = labels[3];
+	                
 		   			//System.out.println(ElFac.findCodeByUserSyncString("user"));
-	                //TODO build a query for elasticsearch that takes both errors and mutations
 	                //TODO returns only useful parts of the full json, like the hits array
-		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorSync(labelError);
-		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantSync(labelMutation);
+//		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorSync(labelError);
+//		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantSync(labelMutation);
+		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorCredentialsSync(labelError,user,group);
+		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantCredentialsSync(labelMutation,user,group);
 		   			
 		   			//jedis.hset("Transaction:", "id", "valore");
 		   			String transactionName = "Transaction:" + record.key();

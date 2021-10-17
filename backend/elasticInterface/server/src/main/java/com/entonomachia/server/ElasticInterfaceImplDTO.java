@@ -201,5 +201,72 @@ public class ElasticInterfaceImplDTO extends UnicastRemoteObject implements Elas
 		tmpRes.readJson(responseJson);
 		return tmpRes.toDTO();
 	}
+	
+	@Override
+	public QueryResultDTO findCodeByLabelErrorCredentialsSync(Double label,String user, String group) throws IOException,RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/", "{\n"
+				+ "  \"query\": {\n"
+				+ "    \"bool\": {\n"
+				+ "      \"must\": [\n"
+				+ "        { \"match\": { \"labelError\": " + label +  " } },\n"
+				+ "        { \n"
+				+ "            \"bool\": {\n"
+				+ "                \"should\": [\n"
+				+ "                    {\"match\": {\"group\" : \"ALL\"}},\n"
+				+ "                    {\"bool\": {\n"
+				+ "                            \"must\" : [\n"
+				+ "                                { \"match\": { \"group\": \"" + group + "\" } }\n"
+				+ "                            ],\n"
+				+ "                            \"must_not\" : [\n"
+				+ "                                { \"match\": {\"group\": \"SELF\"}}\n"
+				+ "                            ]\n"
+				+ "                        }\n"
+				+ "                    },\n"
+				+ "                    {\"match\": {\"user\":\"" + user + "\"}}\n"
+				+ "                ]\n"
+				+ "            }\n"
+				+ "        }\n"
+				+ "      ]\n"
+				+ "    }\n"
+				+ "  }\n"
+				+ "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+	
+	@Override
+	public QueryResultDTO findCodeByLabelMutantCredentialsSync(Double label,String user, String group) throws IOException,RemoteException {
+		QueryResult tmpRes = new QueryResult();
+		String responseJson = ElasticRequestHandler.PostRequest("/primarydirect/", "{\n"
+				+ "  \"query\": {\n"
+				+ "    \"bool\": {\n"
+				+ "      \"must\": [\n"
+				+ "        { \"match\": { \"labelMutant\": " + label +  " } },\n"
+				+ "        { \n"
+				+ "            \"bool\": {\n"
+				+ "                \"should\": [\n"
+				+ "                    {\"match\": {\"group\" : \"ALL\"}},\n"
+				+ "                    {\"bool\": {\n"
+				+ "                            \"must\" : [\n"
+				+ "                                { \"match\": { \"group\": \"" + group + "\" } }\n"
+				+ "                            ],\n"
+				+ "                            \"must_not\" : [\n"
+				+ "                                { \"match\": {\"group\": \"SELF\"}}\n"
+				+ "                            ]\n"
+				+ "                        }\n"
+				+ "                    },\n"
+				+ "                    {\"match\": {\"user\":\"" + user + "\"}}\n"
+				+ "                ]\n"
+				+ "            }\n"
+				+ "        }\n"
+				+ "      ]\n"
+				+ "    }\n"
+				+ "  }\n"
+				+ "}");
+		tmpRes.readJson(responseJson);
+		return tmpRes.toDTO();
+	}
+
 
 }

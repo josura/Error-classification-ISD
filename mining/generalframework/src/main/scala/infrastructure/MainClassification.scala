@@ -69,9 +69,12 @@ object MainClassification extends App{
         //                                                col("labelMutation")
         //                                            )
 
-        val kafkaSendedClassified = newpredictions.select(col("ids"),concat(newpredictions("labelError"),lit(" "),newpredictions("labelMutation")).as("labels"))
+        val kafkaSendedClassified = newpredictions.select(col("ids"),concat(newpredictions("labelError")
+                                                                            ,lit(" "),newpredictions("labelMutation")
+                                                                            ,lit(" "),newpredictions("user")
+                                                                            ,lit(" "),newpredictions("group")).as("labels"))
         
-        //val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
+        val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
 
         val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
         
