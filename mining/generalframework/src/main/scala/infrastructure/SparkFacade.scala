@@ -73,6 +73,11 @@ class SparkFacade(appName:String) {
         spark.read.json(fileName)
     }
 
+    def sparkReadParquet(fileName:String):Dataset[Row] = {
+        if(started) sparkInit()
+        spark.read.parquet(fileName)
+    }
+
     def sparkWriteStreamElastic(data:Dataset[Row]):StreamingQuery = {
         if(started) sparkInit()
         data.writeStream.outputMode("append").
@@ -96,7 +101,7 @@ class SparkFacade(appName:String) {
         if(started) sparkInit()
         data.writeStream
             .format("parquet")
-            .option("checkpointLocation","/sparkcheckpoints")
+            .option("checkpointLocation","/sparkcheckpointsParquet")
             .option("path", fileName)
             .start()
     }

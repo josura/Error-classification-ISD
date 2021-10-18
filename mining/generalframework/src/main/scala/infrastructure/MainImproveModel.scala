@@ -28,7 +28,7 @@ object MainImproveModel extends App{
             add("user",StringType).add("group",StringType)
         val newCode = kafkaStreamingReceiver.Consume("improvemodelcode",schema).drop("cleanedCode")
 
-        val parquetWriteStream = spark.sparkWriteStreamParquet(newCode,FileResolver.getDataDirectory() + "userShared/test.parquet")
+        val parquetWriteStream = spark.sparkWriteStreamParquet(newCode,FileResolver.getDataDirectory() + "usershared/test1.parquet")
 
         val consoleStream = spark.sparkWriteStreamConsole(newCode)
 

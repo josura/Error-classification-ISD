@@ -9,11 +9,16 @@ import org.apache.spark.sql.types.IntegerType
 object MainClassification extends App{
 
     val bugsFile = FileResolver.getDataDirectory() + "final.json"
+    val userSharedData = FileResolver.getDataDirectory() + "usershared/test1.parquet"
 
     val spark = new SparkFacade("Main")
 
     try {
-        val bugs: Dataset[Row]=  spark.sparkReadJson(bugsFile)
+        val parqDF = spark.sparkReadParquet(userSharedData).withColumn("ids",col("ids").cast(IntegerType))
+        parqDF.show()
+        parqDF.printSchema
+
+        val bugs: Dataset[Row]=  spark.sparkReadJson(bugsFile).union(parqDF).withColumn("ids",col("ids").cast(IntegerType))
         bugs.printSchema
       
         val bugsCleaned = CodeCleaner.cleanCode(CodeCleaner.cleanCode(bugs,"CodeWithNoComments","cleanedCode"),"SolutionWithNoComments","cleanedSolution")

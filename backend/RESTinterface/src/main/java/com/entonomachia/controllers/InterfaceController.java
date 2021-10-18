@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.entonomachia.domains.CodeToBeClassified;
+import com.entonomachia.domains.ImproveModelData;
 import com.entonomachia.domains.TransactionStatus;
 import com.entonomachia.repositories.TransactionRepository;
 import com.entonomachia.services.KafkaConsumer;
@@ -94,7 +95,7 @@ public class InterfaceController {
 		String newId = idGen.getNewId().toString();
 		newCode.setIds(newId);
 		placeholder = gson.toJson(newCode);
-		kafProd.publishToTopic(placeholder);	
+		kafProd.publishToTopic(placeholder,"usercode");	
 		
 
 		TransactionStatus tran = new TransactionStatus();
@@ -102,6 +103,35 @@ public class InterfaceController {
 		tran.setStatus("PENDING");
 		tran.setResultError("");
 		tran.setResultMutation("");
+		tranRep.save(tran);
+		return tran.toString();
+
+	}
+	
+	@PostMapping("/share")
+	String sendImproveModelData(@Valid @RequestBody ImproveModelData newCode) {
+		
+		String placeholder="";
+		//useless marshalling, the requestBody could be also taken as a json directly.
+		//even though, maybe the newCode could be also used to build a database of some sort or to
+		//build an authentication and authorization framework.
+		//TODO add TransactionID to the class because the final part need to know the transactionID, 
+		//or use a key-value in redis that links the ID to the transactionID, 
+		//but the client could send the same ID, so this solution is bad
+		String newId = idGen.getNewId().toString();
+		newCode.setIds(newId);
+		newCode.setCodeWithNoComments(newCode.getCode());
+		newCode.setSolutionWithNoComments(newCode.getSolution());
+		placeholder = gson.toJson(newCode);
+		kafProd.publishToTopic(placeholder,"improvemodelcode");	
+		
+
+		TransactionStatus tran = new TransactionStatus();
+		tran.setId(newId);
+		//TODO updating the transaction in SPARK
+		tran.setStatus("FINISHED");
+		tran.setResultError("Thanks for the contribution");
+		tran.setResultMutation("Thanks for the contribution");
 		tranRep.save(tran);
 		return tran.toString();
 
