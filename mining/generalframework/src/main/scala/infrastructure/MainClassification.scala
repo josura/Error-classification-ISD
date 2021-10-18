@@ -14,6 +14,7 @@ object MainClassification extends App{
 
     try {
         val bugs: Dataset[Row]=  spark.sparkReadJson(bugsFile)
+        bugs.printSchema
       
         val bugsCleaned = CodeCleaner.cleanCode(CodeCleaner.cleanCode(bugs,"CodeWithNoComments","cleanedCode"),"SolutionWithNoComments","cleanedSolution")
         bugsCleaned.cache()
@@ -103,8 +104,9 @@ object MainClassification extends App{
         
     } catch {
         case e:Exception=>{
-            ClassifierLogger.printError("Error in main",e)
-            spark.stop()
+            ClassifierLogger.printError("Error in MainClassification",e)
         }
+    } finally {
+        spark.stop()
     }
 }

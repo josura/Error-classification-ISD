@@ -1,6 +1,10 @@
 package infrastructure
 
 import org.apache.spark.sql.{SparkSession,Row,Dataset,SaveMode}
+import org.apache.spark.sql.functions.{udf,col,concat,lit}
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.IntegerType
 
 object MainImproveModel extends App{
 
@@ -9,14 +13,30 @@ object MainImproveModel extends App{
     val bugs: Dataset[Row]=  spark.sparkReadJson(FileResolver.getDataDirectory() + "final.json")
     bugs cache
       
-      
 
     try {
 
-        //val repositoriesTyped = newpredictions.select(col("url"),col("owner"), col("stars"),col("prediction").cast(IntegerType).as("label")).as[repositorieClassified]
-        
+        val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
+        val schema=new StructType().
+            add("ids",StringType).
+            add("error",StringType).
+            add("source",StringType).
+            add("code",StringType).
+            add("solution",StringType).
+            add("CodeWithNoComments",StringType).
+            add("SolutionWithNoComments",StringType).
+            add("user",StringType).add("group",StringType)
+        val newCode = kafkaStreamingReceiver.Consume("improvemodelcode",schema).drop("cleanedCode")
+
+        val parquetWriteStream = spark.sparkWriteStreamParquet(newCode,FileResolver.getDataDirectory() + "userShared/test.parquet")
+
+        val consoleStream = spark.sparkWriteStreamConsole(newCode)
+
+        spark.spark.streams.awaitAnyTermination()        
 
     } catch {
-        case e:Exception=>{spark.stop()}
+        case e: Exception => ClassifierLogger.printError("Exception in MainImproveModel",e)
+    } finally {
+        spark.stop()
     }
 }

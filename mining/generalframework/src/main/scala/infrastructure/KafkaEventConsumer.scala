@@ -13,12 +13,8 @@ class KafkaEventConsumer(val _spark:SparkFacade) extends EventConsumer(_spark){ 
       val fulldf = spark.sparkReadStreamKafka(topics)
       val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
       val userCodeNotCleaned = StringDF.select(from_json(col("value"),schema).as("data")).select("data.*")
-
-      //if(!userCodeNotCleaned("code").isNotNull){
-        //ClassifierLogger.printWarning("unmarshalling of stream data has returned null")
-        //throw new RuntimeException("unmarshalling of stream data has returned null values")
-      //}
       val userCode= CodeCleaner.cleanCode(userCodeNotCleaned,"code","cleanedCode")  //problems if I do not send json data
+      //This method does not need to do this cleaning but It is useful because every part of code that uses this method also need to clean code
       userCode
   }
 }

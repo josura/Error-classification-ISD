@@ -56,6 +56,21 @@ services:
             - entomomachia
         environment:
             - DOCKER_RUNNING=true
+            - MINING=classifier
+        volumes:
+            - ./mining/data:/opt/data/
+            - ./logs:/opt/logs/
+            - ./mining/generalframework:/opt/generalframework
+
+    improve-labeller-model:
+        build: mining/generalframework
+        depends_on:
+            - kafka
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+            - MINING=improve_model
         volumes:
             - ./mining/data:/opt/data/
             - ./logs:/opt/logs/

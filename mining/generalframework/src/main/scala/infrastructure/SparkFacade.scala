@@ -91,4 +91,13 @@ class SparkFacade(appName:String) {
         spark.stop()
         
     }
+
+    def sparkWriteStreamParquet(data:Dataset[Row],fileName:String):StreamingQuery = {
+        if(started) sparkInit()
+        data.writeStream
+            .format("parquet")
+            .option("checkpointLocation","/sparkcheckpoints")
+            .option("path", fileName)
+            .start()
+    }
 }
