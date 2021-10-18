@@ -47,11 +47,17 @@ services:
             KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
         networks:
             - entomomachia
+    kafka-manager:
+        image: sheepkiller/kafka-manager:latest
+        environment:
+          ZK_HOSTS: "zookeeper:2181"
+        ports:
+          - "9000:9000"
+        networks:
+          - entomomachia
 
     general-classifier:
         build: mining/generalframework
-        depends_on:
-            - kafka
         networks: 
             - entomomachia
         environment:
@@ -60,7 +66,42 @@ services:
             - ./mining/data:/opt/data/
             - ./logs:/opt/logs/
             - ./mining/generalframework:/opt/generalframework
-
+    access-control:
+        build: backend/accessControl
+        networks: 
+            - entomomachia
+        environment:
+            - DOCKER_RUNNING=true
+        volumes:
+            - ./logs:/opt/logs/
+            - ./backend/accessControl:/opt/accessControl
+    
+    kafkacat:
+        image: confluentinc/cp-kafkacat:5.0.0
+        stdin_open: true 
+        tty: true
+        networks: 
+            - entomomachia
+    mongo:
+        image: mongo
+        restart: unless-stopped
+        networks: 
+            - entomomachia
+        ports:
+          - 2701:2701
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: access
+    mongo-express:
+        image: mongo-express
+        restart: unless-stopped
+        networks: 
+            - entomomachia
+        ports:
+          - 8081:8081
+        environment:
+          ME_CONFIG_MONGODB_ADMINUSERNAME: root
+          ME_CONFIG_MONGODB_ADMINPASSWORD: access
     elastic-facade-server:
         build: backend/elasticInterface/server
         networks: 
@@ -86,9 +127,6 @@ services:
     rest-interface:
         #build: backend/RESTinterface
         image: docker.io/library/restinterface:0.0.1-SNAPSHOT
-        depends_on:
-            - redis
-            - kafka
         networks: 
             - entomomachia
         environment:
