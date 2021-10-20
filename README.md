@@ -33,3 +33,45 @@ Technologies used in this project:
 > - Better error handling
 > - Better logging
 > - Aspects logging
+
+# DEPENDENCIES
+> - java openjdk (11 for building and running Spring applications)
+> - docker and docker-compose
+> - git
+
+# OPTIONAL DEPENDENCIES FOR TESTING
+This dependencies are not required to run the application in docker but are useful when developing and testing the services
+> - java openjdk 8 for testing scala applications, only java 11 is required to build the Spring image
+> - scala and/or sbt
+> - postman or curl to test the REST calls
+
+# BUILDING AND RUNNING THE PROJECT
+To build and run the whole project
+```bash
+git clone https://github.com/josura/Error-classification-ISD.git
+cd backend/RESTinterface
+./mvnw spring-boot:build-image
+cd ../..
+docker-compose up
+```
+
+# USAGE
+On a web browser or with http requests, go to http://localhost:8888 and experiment with:
+> - GET requests like http://localhost:8888/id where id is a transaction number
+> - POST requests like http://localhost:8888 to get a transaction ID used to see if the prediction of errors and mutation has finished, with a request body with the following json structure:
+```json
+{
+    "user": "GIORGIO",
+    "group": "SELF",
+    "code": "if(testing=false){String goodbye = \"\";}"
+}
+```
+> - POST requests like http://localhost:8888/share to share some code with errors and the corrected code to enhance the model that predicts errors and mutations, with a request body with the following json structure:
+```json
+{
+    "user": "GIORGIO",
+    "group": "ALL",
+    "code": "if(testing=false){String goodbye = \"\";}",
+    "solution": "if(testing==false){String goodbye = \"\";}"
+}
+```
