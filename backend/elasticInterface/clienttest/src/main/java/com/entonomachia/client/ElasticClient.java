@@ -81,7 +81,7 @@ public class ElasticClient {
 			   			
 			   			//jedis.hset("Transaction:", "id", "valore");
 			   			
-		                jedis.hset(transactionName, "status", "ERROR");
+		                jedis.hset(transactionName, "status", "FINISHED");
 		                jedis.hset(transactionName, "resultError", resError.onlyHitsJson);
 		                jedis.hset(transactionName, "resultMutation", resMutation.onlyHitsJson);
 		        		
