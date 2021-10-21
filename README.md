@@ -22,7 +22,7 @@ Technologies used in this project:
 > - REST APIs
 > - Communication framework with kafka, client side, switched with a request-responce pattern to decouple the client request and the whole backbone, the request are now done with transactions registered in redis, when the whole computation of possible errors and mutation has finished, the result are written to redis.
 > - Sharing codes and errors via REST API to improve the model
-> - Propagation of errors through the transaction status(for the mining backend)
+> - Propagation of errors through the transaction status(to enhance for further problems with data)
 
 ## TODOs
 > - Tests for almost everything

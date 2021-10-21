@@ -29,10 +29,6 @@ public class QueryResult implements Serializable {
 		
 	}
 	
-	private void addJsonSource(String json) {
-		listRes.add(JsonHandler.jsonToSource(json));
-		
-	}
 	
 	private void addSource(Source src) {
 		listRes.add(src);

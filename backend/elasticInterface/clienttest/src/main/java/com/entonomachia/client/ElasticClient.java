@@ -50,10 +50,10 @@ public class ElasticClient {
 		      consumer.subscribe(Arrays.asList("labelledcode"));
 		      System.out.println("Subscribed to topic " + " labelledcode");
 		      
-		      System.out.println("testing elastic server functionalities:");
-		      System.out.println(ElFac.findCodeByUserSyncString("user"));
-			  QueryResultDTO res = ElFac.findCodeByLabelErrorSync(40.0);
-			  System.out.println(res.code[0]);
+//		      System.out.println("testing elastic server functionalities:");
+//		      System.out.println(ElFac.findCodeByUserSyncString("user"));
+//			  QueryResultDTO res = ElFac.findCodeByLabelErrorSync(40.0);
+//			  System.out.println(res.code[0]);
 			  System.out.println("\n Polling kafka for labels\n");
 		      while (true) {
 		    	  
