@@ -105,4 +105,8 @@ class SparkFacade(appName:String) {
             .option("path", fileName)
             .start()
     }
+
+    def sparkTypeDataset(data:Dataset[Row]): Dataset[ClassSchema] = {
+        data.as[ClassSchema]
+    }
 }

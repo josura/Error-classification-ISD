@@ -6,7 +6,11 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.types.StringType
 import org.apache.spark.sql.types.IntegerType
 
+import redis.clients.jedis.Jedis
+
 object MainClassification extends App{
+
+    val jedis:Jedis = new Jedis("redis")
 
     val bugsFile = FileResolver.getDataDirectory() + "final.json"
     val userSharedData = FileResolver.getDataDirectory() + "usershared/test1.parquet"
@@ -52,60 +56,46 @@ object MainClassification extends App{
         elasticSender.Send( sendedClassified )
 
         // receiving streming data from kafka from the client
-        //TESTING
-        //val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
-        //val consoleStreamfirst = spark.sparkWriteStreamConsole(fulldf)
-        //TESTING
         val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
+
         val schema=new StructType().
-            //add("ids",IntegerType).
-            add("ids",StringType).
-            add("user",StringType).add("group",StringType).add("code",StringType)
+                //add("ids",IntegerType).
+                add("ids",StringType).
+                add("user",StringType).add("group",StringType).add("code",StringType)
         val newCode = kafkaStreamingReceiver.Consume("usercode",schema)
 
         val consoleStreamafter = spark.sparkWriteStreamConsole(newCode)
 
-        newCode.printSchema()
-        val newpredictions:Dataset[Row] = clusClass.ClassifyCode(newCode,streaming = true)
-        newpredictions.printSchema()   //newpredictions could be changed like sendedClassified because the unmarshalling of json data in a java object could be bad for arrays or vectors
-        //val consoleStream = spark.sparkWriteStreamConsole(newpredictions)//.awaitTermination()  //TODO refactor in  console event class
+        try{
+            
 
-        //val kafkaSendedClassified = newpredictions.select(col("ids"),col("code"),col("user"),col("group"),
-        //                                                col("labelError"),
-        //                                                col("labelMutation")
-        //                                            )
+            val newpredictions:Dataset[Row] = clusClass.ClassifyCode(newCode,streaming = true)
 
-        val kafkaSendedClassified = newpredictions.select(col("ids"),concat(newpredictions("labelError")
+            val kafkaSendedClassified = newpredictions.select(col("ids"),concat(newpredictions("labelError")
                                                                             ,lit(" "),newpredictions("labelMutation")
                                                                             ,lit(" "),newpredictions("user")
                                                                             ,lit(" "),newpredictions("group")).as("labels"))
         
-        val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
+            val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
 
-        val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")    //TODO refactor in  kafka event sender class and understand what to send and to what topic(create a topic for every user, send everything to one topic, sending only identifiers,users,groups and labelMutant/Error)
+            val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")
         
+
+        } catch {
+            case e: Throwable => {
+
+                val typedNewCode = spark.sparkTypeDataset(newCode.select(newCode("ids"),newCode("code"),newCode("cleanedCode")))
+                    typedNewCode.take(newCode.count.toInt).foreach(t => {
+                    val transactionName = "Transaction:" + t.ids;
+                    jedis.hset(transactionName, "status", "ERROR");
+                    jedis.hset(transactionName, "resultError", "error during the prediction, stacktrace:\n" + e.toString() + "\n\n resulting code and cleaned code is: \n\t code --> " + t.code + "\n\t code --> " + t.cleanedCode );
+                    jedis.hset(transactionName, "resultMutation", "error, read result error for details" );
+                })
+
+                
+            }
+        }
         spark.spark.streams.awaitAnyTermination()
-        // TESTING
-        //val fulldf = spark.spark.readStream.format("kafka").option("kafka.bootstrap.servers","kafka:9092").option("subscribe","usercode").load()
-        //val StringDF = fulldf.selectExpr("CAST(value AS STRING)")
-        //val schema = new StructType().add("ids",IntegerType).add("user",StringType).add("group",StringType).add("code",StringType)
-        //import spark.spark.implicits._
-        //import org.apache.spark.sql.functions._
-        //val UserCode:Dataset[Row] = CodeCleaner.cleanCode(StringDF.select(from_json(col("value"),schema).as("data")).select("data.*"),"code","cleanedCode")
-//
-        //val newpredictions:Dataset[Row] = clusClass.ClassifyCode(UserCode)
-//
-        //newpredictions.writeStream.format("console").outputMode("append").start()
-//
-        //newpredictions.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)").  //casting ?? TODO control
-        //    writeStream.
-        //    format("kafka").
-        //    option("kafka.bootstrap.servers", "kafka:9092").
-        //    option("topic", "test").
-        //    start().
-        //    awaitTermination()
-        //TESTING
-        //val repositoriesTyped = newpredictions.select(col("url"),col("owner"), col("stars"),col("prediction").cast(IntegerType).as("label")).as[repositorieClassified]
         
     } catch {
         case e:Exception=>{

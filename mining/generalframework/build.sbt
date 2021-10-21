@@ -2,8 +2,8 @@
 
 ThisBuild / scalaVersion     := "2.11.12"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.unict"
-ThisBuild / organizationName := "unict"
+ThisBuild / organization     := "com.entonomachia"
+ThisBuild / organizationName := "entonomachia"
 
 lazy val root = (project in file("."))
   .settings(
@@ -26,7 +26,10 @@ libraryDependencies ++= Seq(
   ("org.elasticsearch" % "elasticsearch-spark-20_2.11" % "7.7.1"),
   ("org.apache.spark" %% "spark-avro" % "2.4.5"),
   //logging
-  ("com.typesafe.scala-logging" %% "scala-logging" % "3.9.0")
+  ("com.typesafe.scala-logging" %% "scala-logging" % "3.9.0"),
+  //redis client
+  //("net.debasishg" %% "redisclient" % "3.31")  //not working
+  ("redis.clients" % "jedis" % "3.7.0") 
 )
 
 dependencyOverrides ++= {
