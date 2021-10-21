@@ -73,15 +73,24 @@ public class ElasticClient {
 	                //TODO returns only useful parts of the full json, like the hits array
 //		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorSync(labelError);
 //		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantSync(labelMutation);
-		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorCredentialsSync(labelError,user,group);
-		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantCredentialsSync(labelMutation,user,group);
-		   			
-		   			//jedis.hset("Transaction:", "id", "valore");
 		   			String transactionName = "Transaction:" + record.key();
-	                jedis.hset(transactionName, "status", "FINISHED");
-	                jedis.hset(transactionName, "resultError", resError.onlyHitsJson);
-	                jedis.hset(transactionName, "resultMutation", resMutation.onlyHitsJson);
-	        		
+
+		            try {
+		            	QueryResultDTO resError = ElFac.findCodeByLabelErrorCredentialsSync(labelError,user,group);
+			   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantCredentialsSync(labelMutation,user,group);
+			   			
+			   			//jedis.hset("Transaction:", "id", "valore");
+			   			
+		                jedis.hset(transactionName, "status", "ERROR");
+		                jedis.hset(transactionName, "resultError", resError.onlyHitsJson);
+		                jedis.hset(transactionName, "resultMutation", resMutation.onlyHitsJson);
+		        		
+		            } catch(Exception e) {
+
+		                jedis.hset(transactionName, "status", "ERROR");
+		                jedis.hset(transactionName, "resultError", "error during the orchestrator call to get the predictions in elastic-search, stacktrace:\n" + e.toString() );
+		                jedis.hset(transactionName, "resultMutation", "error, for more information see resultError field");
+		            }
 		   			//System.out.println(resError.fullJson);
 		   			//System.out.println(resError.onlyHitsJson);
 	               
@@ -98,7 +107,9 @@ public class ElasticClient {
 		} catch(Exception e) {
 			consumer.close();
 			e.printStackTrace();
-		} 
+		} finally {
+			jedis.close();
+		}
 	}
 
 }
