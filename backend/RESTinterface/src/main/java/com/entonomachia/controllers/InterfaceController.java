@@ -150,15 +150,17 @@ public class InterfaceController {
 	@PutMapping("/{user}")
 	public @ResponseBody String updateUser(
 			@PathVariable String id,
-			@Valid @RequestBody CodeToBeClassified newAlien) {
+			@Valid @RequestBody CodeToBeClassified newUser) {
 		return null;
 		//TODO i do not know if this method is useful to me
 	}
 	
 	// DELETE
-	@DeleteMapping("/{user}")
-	void deleteAlien(@PathVariable String user) {
-		//TODO delete user repositories
+	@DeleteMapping("/{id}")
+	void deleteAlien(@PathVariable String id) {
+		if(tranRep.existsById(id)) {
+			tranRep.deleteById(id);
+		}
 	}
 	
 	//TODO other methods to delete single repositories by id, other things
