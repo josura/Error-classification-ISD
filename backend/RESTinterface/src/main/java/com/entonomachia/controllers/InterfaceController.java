@@ -33,8 +33,6 @@ public class InterfaceController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceController.class);
 	
 	Gson gson = null;
-	
-
 
 	@Autowired
 	KafkaProducer kafProd;
@@ -51,30 +49,9 @@ public class InterfaceController {
 	
 	@GetMapping("")
 	public @ResponseBody String getRoot () {
-		//idGen.testConnection();
-//		TransactionStatus tran = new TransactionStatus();
-//		tran.setId("7");
-//		tran.setStatus("FINISHED");
-//		tran.setResult("[{test=\"test\"},{test=\"visione\"}]");
-//		tranRep.save(tran);
 //		TODO create a simple homepage
 		return "ENTONOMACHIA REST API";
 	}
-	
-//	@GetMapping("")
-//	public @ResponseBody String getIdTransactionStatus (
-//			@RequestParam String id) {
-//		return tranRep.findById(id).get().toString();
-//	}
-	
-//	@GetMapping("")
-//	public @ResponseBody String getUserGroupRepo (
-//			@RequestParam String user,
-//			@RequestParam String group) {
-//		//idGen.testConnection();
-//		System.out.println( idGen.getNewId());
-//		return "Test";
-//	}
 	
 	/* CRUD OPERATIONS */
 	
@@ -83,12 +60,6 @@ public class InterfaceController {
 	String classifyCode(@Valid @RequestBody CodeToBeClassified newCode) {
 		
 		String placeholder="";
-		//useless marshalling, the requestBody could be also taken as a json directly.
-		//even though, maybe the newCode could be also used to build a database of some sort or to
-		//build an authentication and authorization framework.
-		//TODO add TransactionID to the class because the final part need to know the transactionID, 
-		//or use a key-value in redis that links the ID to the transactionID, 
-		//but the client could send the same ID, so this solution is bad
 		String newId = idGen.getNewId().toString();
 		newCode.setIds(newId);
 		placeholder = gson.toJson(newCode);
@@ -109,12 +80,6 @@ public class InterfaceController {
 	String sendImproveModelData(@Valid @RequestBody ImproveModelData newCode) {
 		
 		String placeholder="";
-		//useless marshalling, the requestBody could be also taken as a json directly.
-		//even though, maybe the newCode could be also used to build a database of some sort or to
-		//build an authentication and authorization framework.
-		//TODO add TransactionID to the class because the final part need to know the transactionID, 
-		//or use a key-value in redis that links the ID to the transactionID, 
-		//but the client could send the same ID, so this solution is bad
 		String newId = idGen.getNewId().toString();
 		newCode.setIds(newId);
 		newCode.setCodeWithNoComments(newCode.getCode());
@@ -125,7 +90,6 @@ public class InterfaceController {
 
 		TransactionStatus tran = new TransactionStatus();
 		tran.setId(newId);
-		//TODO updating the transaction in SPARK
 		tran.setStatus("FINISHED");
 		tran.setResultError("Thanks for the contribution");
 		tran.setResultMutation("Thanks for the contribution");
@@ -160,5 +124,5 @@ public class InterfaceController {
 		}
 	}
 	
-	//TODO other methods to delete single repositories by id, other things
+	//TODO other methods to delete single repositories by user, other things
 }
