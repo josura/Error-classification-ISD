@@ -28,7 +28,7 @@ public class LoggingAspect {
     
     @Around("springControllerPointcut()")		
     public Object logAround(ProceedingJoinPoint joinpoint) throws Throwable {
-    	log.debug("Request for " + joinpoint.getSignature().getDeclaringTypeName() + "." + joinpoint.getSignature().getName() + 
+    	log.info("Request for " + joinpoint.getSignature().getDeclaringTypeName() + "." + joinpoint.getSignature().getName() + 
     			" with arguments=" + Arrays.toString( joinpoint.getArgs()) );
     	Object returnvalue = joinpoint.proceed();
     	return returnvalue;
