@@ -24,15 +24,17 @@ Technologies used in this project:
 > - Sharing codes and errors via REST API to improve the model
 > - Propagation of errors through the transaction status(to enhance for further problems with data)
 
+## PARTIALLY IMPLEMENTED
+> - Access control for users with different roles (access to certain code, access to all code for admins, implementation in elastic-facade done , more controls over access and authentication and authorization need to be implemented)
+> - Aspects logging
+
 ## TODOs
 > - Tests for almost everything
-> - Access control for users with different roles (access to certain code, access to all code for admins, implement the queries in elasticsearch and this should be done)
 > - WEB interface(It was in production but the backbone was more important)
 > - Tracing
 > - logging analysis by passing logs in ElasticSearch and visualizing them in Kibana (controlling logs file and passing new logs everytime the logfile gets written)
 > - Better error handling
 > - Better logging
-> - Aspects logging
 
 # DEPENDENCIES
 > - java openjdk (11 for building and running Spring applications)
