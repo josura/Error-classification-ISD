@@ -21,7 +21,6 @@ import com.entonomachia.domains.CodeToBeClassified;
 import com.entonomachia.domains.ImproveModelData;
 import com.entonomachia.domains.TransactionStatus;
 import com.entonomachia.repositories.TransactionRepository;
-import com.entonomachia.services.KafkaConsumer;
 import com.entonomachia.services.KafkaProducer;
 import com.entonomachia.services.RedisInterface;
 import com.google.gson.Gson;
@@ -35,9 +34,7 @@ public class InterfaceController {
 	
 	Gson gson = null;
 	
-	
-	@Autowired
-	KafkaConsumer kafCons;
+
 
 	@Autowired
 	KafkaProducer kafProd;
