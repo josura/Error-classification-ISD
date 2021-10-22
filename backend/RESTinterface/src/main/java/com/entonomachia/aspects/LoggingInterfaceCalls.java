@@ -29,17 +29,7 @@ public class LoggingInterfaceCalls {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
     
-    /**
-     * Advice that logs methods throwing exceptions.
-     *
-     * @param joinPoint join point for advice
-     * @param e exception
-     */
-    @AfterThrowing(pointcut = "springControllerPointcut()", throwing = "e")
-    public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
-            joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL");
-    }
+    
     
     
 //    @Before("springControllerPointcut() && args(..,request)")

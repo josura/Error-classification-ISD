@@ -26,6 +26,23 @@ public class LoggingAspect {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
     
+    @Pointcut("within(com.entonomachia..*)")
+    public void packagePointcut() {
+        // Method is empty as this is just a Pointcut, the implementations are in the advices.
+    }
+    
+    /**
+     * Advice that logs methods throwing exceptions.
+     *
+     * @param joinPoint join point for advice
+     * @param e exception
+     */
+    @AfterThrowing(pointcut = "packagePointcut()", throwing = "e")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
+        log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
+            joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL");
+    }
+    
     @Around("springControllerPointcut()")		
     public Object logAround(ProceedingJoinPoint joinpoint) throws Throwable {
     	log.info("Request for " + joinpoint.getSignature().getDeclaringTypeName() + "." + joinpoint.getSignature().getName() + 
