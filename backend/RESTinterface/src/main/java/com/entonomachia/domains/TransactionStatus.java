@@ -22,6 +22,15 @@ public class TransactionStatus implements Serializable {
 	private String resultError;
 	private String resultMutation;
 	
+	public TransactionStatus() {}
+	
+	public TransactionStatus(String _id, String _status, String resultErr, String resultMut) {
+		this.id = _id;
+		this.status = _status;
+		this.resultError = resultErr;
+		this.resultMutation = resultMut;
+	}
+	
 	
 	
 	public String getId() {
@@ -50,13 +59,15 @@ public class TransactionStatus implements Serializable {
 		this.resultMutation = result;
 	}
 	
+	//toJson
 	@Override
 	public String toString() {
-		return "{\n" + 
+		String ret =  "{\n" + 
 				"\t\"id\":\"" + id + "\",\n"+ 
 				"\t\"status\":\"" + status + "\",\n"+ 
-				"\t\"resultError\":\"" + resultError + "\"" + "\n}"+ 
-				"\t\"resultMutation\":\"" + resultMutation + "\"" + "\n}";
+				"\t\"resultError\":\"" + resultError.replace("\"", "\\\"") + "\",\n"+ 
+				"\t\"resultMutation\":\"" + resultMutation.replace("\"", "\\\"") + "\"" + "\n}";
+		return ret;
 	}
 	
 }
