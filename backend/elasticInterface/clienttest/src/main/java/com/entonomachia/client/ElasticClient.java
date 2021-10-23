@@ -15,8 +15,7 @@ import com.entonomachia.server.QueryResultDTO;
 
 import redis.clients.jedis.Jedis;
 
-
-//this class will not be used but will be used as template in the spring backend application
+//TODO testing and refactoring of single functionalities in different classes
 public class ElasticClient {
 	private static ElasticInterface ElFac;
 	
