@@ -35,14 +35,36 @@ jobs:
       working-directory: ./backend/accessControl
       #run: mvn --batch-mode --update-snapshots verify
       run: mvn test
-  test-elastic-interface-server:
+  test-rest-interface:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: actions/setup-java@v2
       with:
         java-version: '11'
         distribution: 'adopt'
-    - name: test spring access control and REST API
-      working-directory: ./backend/elasticInterface/server
+    - name: test spring REST API
+      working-directory: ./backend/RESTinterface
       #run: mvn --batch-mode --update-snapshots verify
       run: mvn test
+  test-web-interface:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v2
+      with:
+        java-version: '11'
+        distribution: 'adopt'
+    - name: test spring web interface
+      working-directory: ./frontend/web
+      #run: mvn --batch-mode --update-snapshots verify
+      run: mvn test
+  #test-elastic-interface-server:
+  #  - uses: actions/checkout@v2
+  #  - name: Set up JDK 11
+  #    uses: actions/setup-java@v2
+  #    with:
+  #      java-version: '11'
+  #      distribution: 'adopt'
+  #  - name: test spring access control and REST API
+  #    working-directory: ./backend/elasticInterface/server
+  #    #run: mvn --batch-mode --update-snapshots verify
+  #    run: mvn test
