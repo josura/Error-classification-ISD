@@ -147,5 +147,26 @@ public class RESTinterfaceControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", CoreMatchers.notNullValue()))
                 .andExpect(jsonPath("$.status", is("FINISHED")));
-        }
+    }
+    
+    @Test
+    public void deleteTransaction_success() throws Exception {
+    	Mockito.when(mockTranRep.existsById("6")).thenReturn(true);
+    	Mockito.doNothing().doThrow(new RuntimeException()).when(mockTranRep).deleteById("6");
+    	
+    	mockMvc.perform(MockMvcRequestBuilders
+                .delete("/6")
+                .contentType(MediaType.APPLICATION_JSON))
+        		.andExpect(status().isOk());
+    }
+    
+    @Test
+    public void deleteTransaction_notexists() throws Exception {
+    	Mockito.when(mockTranRep.existsById("7")).thenReturn(false);
+    	
+    	mockMvc.perform(MockMvcRequestBuilders
+                .delete("/7")
+                .contentType(MediaType.APPLICATION_JSON))
+        		.andExpect(status().isNotFound());
+    }
 }

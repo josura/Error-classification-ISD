@@ -5,6 +5,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.IdGenerator;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,10 +120,12 @@ public class InterfaceController {
 	
 	// DELETE
 	@DeleteMapping("/{id}")
-	void deleteAlien(@PathVariable String id) {
+	public ResponseEntity<String> deleteAlien(@PathVariable String id) {
 		if(tranRep.existsById(id)) {
 			tranRep.deleteById(id);
+			return new ResponseEntity<>(id, HttpStatus.OK);
 		}
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 	
 	//TODO other methods to delete single repositories by user, other things
