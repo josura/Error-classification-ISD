@@ -14,6 +14,7 @@ Technologies used in this project:
 > - [Spring Framework](https://www.google.com/search?client=firefox-b-d&q=spring) as the main component for the web server and the backend for communication between end users and prediction framework
 > - [Kafka](https://www.confluent.io/what-is-apache-kafka/?utm_medium=sem&utm_source=google&utm_campaign=ch.sem_br.nonbrand_tp.prs_tgt.kafka_mt.xct_rgn.emea_lng.eng_dv.all_con.kafka-general&utm_term=kafka&creative=&device=c&placement=&gclid=CjwKCAjw7--KBhAMEiwAxfpkWI5WuMmACbZnsIRBemzfwiqFWKfgoY9WfTjr2mPf2p7OdkaOvl1AFhoCdbIQAvD_BwE) as the messaging and event system that makes the whole project event driven.
 > - [Docker](https://www.docker.com/) and [Docker-compose](https://docs.docker.com/compose/) to simply create microservices, orchestrate the whole project and make It Scalable.
+> - [Redis](https://www.redis.com/) for the transaction database.
 
 ## IMPLEMENTED
 > - Classification framework for errors and mutations based on code passed on input
@@ -27,14 +28,14 @@ Technologies used in this project:
 ## PARTIALLY IMPLEMENTED
 > - Access control for users with different roles (access to certain code, access to all code for admins, implementation in elastic-facade done , more controls over access and authentication and authorization need to be implemented)
 > - Aspects logging
+> - Tests for the elastic-facade-server and minor parts of the code in other services
+> - Better logging for the elastic-facade server and client, along with more detailed logging for the spring REST interface(and for the web interface as well)
 
 ## TODOs
-> - Tests for almost everything
 > - WEB interface(It was in production but the backbone was more important)
 > - Tracing
 > - logging analysis by passing logs in ElasticSearch and visualizing them in Kibana (controlling logs file and passing new logs everytime the logfile gets written)
 > - Better error handling
-> - Better logging
 
 # DEPENDENCIES
 > - java openjdk (11 for building and running Spring applications)
