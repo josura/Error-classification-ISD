@@ -53,6 +53,7 @@ To build and run the whole project
 ```bash
 git clone https://github.com/josura/Error-classification-ISD.git
 cd backend/RESTinterface
+chmod a+x mvnw
 ./mvnw spring-boot:build-image
 cd ../..
 docker-compose up
