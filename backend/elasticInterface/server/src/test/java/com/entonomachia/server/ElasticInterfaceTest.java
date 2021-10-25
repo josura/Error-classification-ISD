@@ -4,12 +4,21 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+
+import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ElasticInterfaceTest {
 	String jsonTest;
 	
+	@Mock
+	ElasticRequestHandler mockElasticReq;
+	
 	@Before
 	public void setUp() throws Exception {
+		initMocks(this);
 		jsonTest = "{\n"
 				+ "    \"took\": 3,\n"
 				+ "    \"timed_out\": false,\n"
@@ -51,6 +60,7 @@ public class ElasticInterfaceTest {
 				+ "    }\n"
 				+ "}";
 	}
+	
 	
 	
 	

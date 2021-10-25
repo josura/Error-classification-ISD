@@ -9,7 +9,6 @@ import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.apache.http.HttpEntity;
 
 
 public class ElasticRequestHandler {
