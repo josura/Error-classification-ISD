@@ -58,6 +58,14 @@ chmod a+x mvnw
 cd ../..
 docker-compose up
 ```
+The last bash command(to bring up the whole application with docker) is not stable and most of the times some component fails due to heavy dependencies to other components, so a different approach would be bringing up every service in different windows/tabs in the following order
+1. **zookeeper and kafka**
+2. **elastic-search**
+3. **redis**
+4. **general-classifier** and **improve-labeller-model**
+5. **elastic-facade-server**
+6. **elastic-facade-client**
+7. **rest-interface**
 
 # USAGE
 On a web browser or with http requests, go to http://localhost:8888 and experiment with:
