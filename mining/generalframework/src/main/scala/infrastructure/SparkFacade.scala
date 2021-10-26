@@ -78,17 +78,17 @@ class SparkFacade(appName:String) {
         spark.read.parquet(fileName)
     }
 
-    def sparkWriteStreamElastic(data:Dataset[Row]):StreamingQuery = {
+    def sparkWriteStreamElastic(data:Dataset[Row],index:String):StreamingQuery = {
         if(started) sparkInit()
         data.writeStream.outputMode("append").
             format("es").option("checkpointLocation","/sparkcheckpoints").
-            option("es.mapping.id","url").start("code/classified")
+            option("es.mapping.id","url").start(index)
     }
 
     def sparkWriteStreamConsole(data:Dataset[Row]):StreamingQuery = {
         if(started) sparkInit()
         data.writeStream.format("console").
-            option("truncate", false).     //TODO remove it or comment it
+            //option("truncate", false).     //TODO remove it or comment it
             outputMode("append").start()
     }
 

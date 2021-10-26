@@ -33,7 +33,7 @@ object MainClassification extends App{
         val defectRecordsClassified = clusClass.ClassifyCode(bugsCleaned)
 
         //sending the errors and mutation to elasticSearch 
-        // TODO add ids to new data
+        
         val elasticSender = new ElasticDataSender(spark,"ids","primarydirect/classified")
 
         val vecToStringUDF = udf((vec:org.apache.spark.ml.linalg.DenseVector)=> { 
@@ -55,8 +55,12 @@ object MainClassification extends App{
 
         elasticSender.Send( sendedClassified )
 
-        // receiving streming data from kafka from the client
+        // receiving streming data from kafka from the client, event receiver
         val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
+
+        //event senders
+        val consoleStreamSender = new ConsoleSender(spark)
+        val kafkaStreamSender = new KafkaEventSender(spark)
 
         val schema=new StructType().
                 //add("ids",IntegerType).
@@ -64,7 +68,7 @@ object MainClassification extends App{
                 add("user",StringType).add("group",StringType).add("code",StringType)
         val newCode = kafkaStreamingReceiver.Consume("usercode",schema)
 
-        val consoleStreamafter = spark.sparkWriteStreamConsole(newCode)
+        val consoleStreamafter = consoleStreamSender.Send(newCode)
 
         try{
             
@@ -76,14 +80,16 @@ object MainClassification extends App{
                                                                             ,lit(" "),newpredictions("user")
                                                                             ,lit(" "),newpredictions("group")).as("labels"))
         
-            val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
+            //val consoleStreamFinal = spark.sparkWriteStreamConsole(kafkaSendedClassified)
+            val consoleStreamFinal = consoleStreamSender.Send(kafkaSendedClassified)
 
-            val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")
+            //val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")
+            val kafkaStreamSended = kafkaStreamSender.Send(kafkaSendedClassified,"labelledcode")
         
 
         } catch {
             case e: Throwable => {
-
+                ClassifierLogger.printError("Exception during streaming ingestion and manipulation ",e)
                 val typedNewCode = spark.sparkTypeDataset(newCode.select(newCode("ids"),newCode("code"),newCode("cleanedCode")))
                     typedNewCode.take(newCode.count.toInt).foreach(t => {
                     val transactionName = "Transaction:" + t.ids;

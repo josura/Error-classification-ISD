@@ -78,6 +78,8 @@ services:
 
     elastic-facade-server:
         build: backend/elasticInterface/server
+        depends_on:
+            - elastic-search 
         networks: 
             - entomomachia
         environment:

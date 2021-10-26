@@ -12,11 +12,17 @@ object MainImproveModel extends App{
 
     val bugs: Dataset[Row]=  spark.sparkReadJson(FileResolver.getDataDirectory() + "final.json")
     bugs cache
+
+    //receivers(events and data)
+    val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
+
+    //senders(events and data)
+    val parquetSender = new ParquetEventSender(spark)
+    val consoleSender = new ConsoleSender(spark)
       
 
     try {
 
-        val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
         val schema=new StructType().
             add("ids",StringType).
             add("error",StringType).
@@ -28,9 +34,9 @@ object MainImproveModel extends App{
             add("user",StringType).add("group",StringType)
         val newCode = kafkaStreamingReceiver.Consume("improvemodelcode",schema).drop("cleanedCode")
 
-        val parquetWriteStream = spark.sparkWriteStreamParquet(newCode,FileResolver.getDataDirectory() + "usershared/test1.parquet")
+        val parquetWriteStream = parquetSender.Send(newCode,FileResolver.getDataDirectory() + "usershared/test1.parquet")
 
-        val consoleStream = spark.sparkWriteStreamConsole(newCode)
+        val consoleStream = consoleSender.Send(newCode)
 
         spark.spark.streams.awaitAnyTermination()        
 
