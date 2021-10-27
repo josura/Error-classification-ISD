@@ -60,7 +60,7 @@ object MainClassification extends App{
 
         //event senders
         val consoleStreamSender = new ConsoleSender(spark)
-        val kafkaStreamSender = new KafkaEventSender(spark)
+        val kafkaStreamSender = new KafkaEventSender(spark,"labelledcode")
 
         val schema=new StructType().
                 //add("ids",IntegerType).
@@ -84,7 +84,7 @@ object MainClassification extends App{
             val consoleStreamFinal = consoleStreamSender.Send(kafkaSendedClassified)
 
             //val kafkaStreamSender = spark.sparkWriteStreamKafka(kafkaSendedClassified,"labelledcode")
-            val kafkaStreamSended = kafkaStreamSender.Send(kafkaSendedClassified,"labelledcode")
+            val kafkaStreamSended = kafkaStreamSender.Send(kafkaSendedClassified)
         
 
         } catch {

@@ -6,7 +6,7 @@ import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.Row
 
 class ConsoleSender(_spark:SparkFacade) extends EventSender(_spark){
-    def Send(data: Dataset[Row], topics: String = null): StreamingQuery = {
+    def Send(data: Dataset[Row]): StreamingQuery = {
         _spark.sparkWriteStreamConsole(data)
     }
 }

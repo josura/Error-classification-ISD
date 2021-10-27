@@ -17,7 +17,7 @@ object MainImproveModel extends App{
     val kafkaStreamingReceiver = new KafkaEventConsumer(spark)
 
     //senders(events and data)
-    val parquetSender = new ParquetEventSender(spark)
+    val parquetSender = new ParquetEventSender(spark,FileResolver.getDataDirectory() + "usershared/test1.parquet")
     val consoleSender = new ConsoleSender(spark)
       
 
@@ -34,7 +34,7 @@ object MainImproveModel extends App{
             add("user",StringType).add("group",StringType)
         val newCode = kafkaStreamingReceiver.Consume("improvemodelcode",schema).drop("cleanedCode")
 
-        val parquetWriteStream = parquetSender.Send(newCode,FileResolver.getDataDirectory() + "usershared/test1.parquet")
+        val parquetWriteStream = parquetSender.Send(newCode)
 
         val consoleStream = consoleSender.Send(newCode)
 

@@ -8,5 +8,9 @@ import org.apache.spark.sql.types.StructType
 
 
 abstract class EventSender(var spark:SparkFacade) {
-  def Send(data:Dataset[Row],topics:String):StreamingQuery
+  def Send(data:Dataset[Row]):StreamingQuery
+
+  def changeTarget(newTarget:String):Unit={
+
+  }
 }
