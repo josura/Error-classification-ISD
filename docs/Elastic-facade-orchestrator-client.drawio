@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2021-10-30T22:50:53.542Z" agent="5.0 (X11)" etag="FDtH43ckUx44-ctElSSV" version="15.6.2" type="github">
+<mxfile host="app.diagrams.net" modified="2021-10-30T22:57:43.129Z" agent="5.0 (X11)" etag="35tvV66Qnbs_ymcpU7cG" version="15.6.2" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
     <mxGraphModel dx="2249" dy="724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -146,6 +146,47 @@
             <mxPoint x="360" y="250" as="sourcePoint" />
             <mxPoint x="410" y="200" as="targetPoint" />
           </mxGeometry>
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-9" value="redis.clients.jedis" style="swimlane;align=center;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1030" y="10" width="270" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-17" value="Jedis" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-9">
+          <mxGeometry x="10" y="38" width="250" height="64" as="geometry">
+            <mxRectangle x="340" y="380" width="170" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-18" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-17">
+          <mxGeometry y="26" width="250" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-19" value="&lt;div&gt;+ hset(id:String,attribute:String,value:String)&lt;br&gt;&lt;/div&gt;&lt;div&gt;...&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-17">
+          <mxGeometry y="34" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-10" value="org.apache.kafka.clients.consumer" style="swimlane;align=center;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1030" y="248" width="300" height="212" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-11" value="KafkaConsumer" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-10">
+          <mxGeometry x="10" y="42" width="160" height="50" as="geometry">
+            <mxRectangle x="340" y="380" width="170" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-12" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-11">
+          <mxGeometry y="26" width="160" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-15" value="ConsumerRecord" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-10">
+          <mxGeometry x="20" y="152" width="160" height="50" as="geometry">
+            <mxRectangle x="340" y="380" width="170" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-16" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-15">
+          <mxGeometry y="26" width="160" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-13" value="ConsumerRecords" style="swimlane;fontStyle=0;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeLast=0;collapsible=1;marginBottom=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-10">
+          <mxGeometry x="10" y="102" width="160" height="50" as="geometry">
+            <mxRectangle x="340" y="380" width="170" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Kh6skNde1Fd5iUF5DBpw-14" value="" style="line;html=1;strokeWidth=1;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="Kh6skNde1Fd5iUF5DBpw-13">
+          <mxGeometry y="26" width="160" height="8" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
