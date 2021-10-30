@@ -17,7 +17,7 @@ import redis.clients.jedis.Jedis;
 
 //TODO testing and refactoring of single functionalities in different classes
 public class ElasticClient {
-	private static ElasticInterface ElFac;
+//	private static ElasticInterface ElFac;
 	
 	public static void main(String[] args) {
 		System.out.println("Starting orchestrator...");
@@ -40,12 +40,13 @@ public class ElasticClient {
 	    //jedis.auth("password");   //right now the redis repository does not have a password, TODO?
     	System.out.println("Redis connection returns " + jedis.ping());
 		try {
-			  //RMI client to elastic-interface setup
-			  System.setProperty("java.rmi.server.hostname","elastic-facade-server");
-			  //ElFac = (ElasticInterface)Naming.lookup("ElasticFacade");
-			  Registry reg=LocateRegistry.getRegistry("elastic-facade-server",1099);
-			  ElFac = (ElasticInterface)reg.lookup("ElasticFacade");
-		      
+//			  //RMI client to elastic-interface setup
+//			  System.setProperty("java.rmi.server.hostname","elastic-facade-server");
+//			  //ElFac = (ElasticInterface)Naming.lookup("ElasticFacade");
+//			  Registry reg=LocateRegistry.getRegistry("elastic-facade-server",1099);
+//			  ElFac = (ElasticInterface)reg.lookup("ElasticFacade");
+//		      
+			  ElasticInterfaceProxy ElFac = new ElasticInterfaceProxy();
 		      consumer.subscribe(Arrays.asList("labelledcode"));
 		      System.out.println("Subscribed to topic " + " labelledcode");
 		      
