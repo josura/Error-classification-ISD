@@ -1,7 +1,5 @@
 package com.entonomachia.client;
 
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Arrays;
 import java.util.Properties;
 import java.time.Duration;
@@ -10,7 +8,6 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
-import com.entonomachia.server.ElasticInterface;
 import com.entonomachia.server.QueryResultDTO;
 
 import redis.clients.jedis.Jedis;
