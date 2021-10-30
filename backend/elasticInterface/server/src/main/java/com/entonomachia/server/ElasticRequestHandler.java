@@ -13,11 +13,27 @@ import org.elasticsearch.client.RestClient;
 
 public class ElasticRequestHandler {
 	
+	static ElasticRequestHandler instance = null;
+
+
+
 	static RestClient client;
 	static {
 		client = RestClient.builder(new HttpHost("elastic-search", 9200, "http")).build();
 	}
+
+	private ElasticRequestHandler(){
+
+	}
 	
+	public static ElasticRequestHandler getInstance(){
+		if(instance == null){
+			instance = new ElasticRequestHandler();
+		}
+
+		return instance;
+	}
+
 	/**
 	* GET request to elasticsearch
 	*
