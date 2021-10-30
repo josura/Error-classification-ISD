@@ -16,9 +16,7 @@ import com.entonomachia.server.QueryResultDTO;
 import redis.clients.jedis.Jedis;
 
 //TODO testing and refactoring of single functionalities in different classes
-public class ElasticClient {
-//	private static ElasticInterface ElFac;
-	
+public class ElasticClient {	
 	public static void main(String[] args) {
 		System.out.println("Starting orchestrator...");
 		//Kafka consumer properties
@@ -40,20 +38,9 @@ public class ElasticClient {
 	    //jedis.auth("password");   //right now the redis repository does not have a password, TODO?
     	System.out.println("Redis connection returns " + jedis.ping());
 		try {
-//			  //RMI client to elastic-interface setup
-//			  System.setProperty("java.rmi.server.hostname","elastic-facade-server");
-//			  //ElFac = (ElasticInterface)Naming.lookup("ElasticFacade");
-//			  Registry reg=LocateRegistry.getRegistry("elastic-facade-server",1099);
-//			  ElFac = (ElasticInterface)reg.lookup("ElasticFacade");
-//		      
 			  ElasticInterfaceProxy ElFac = new ElasticInterfaceProxy();
 		      consumer.subscribe(Arrays.asList("labelledcode"));
 		      System.out.println("Subscribed to topic " + " labelledcode");
-		      
-//		      System.out.println("testing elastic server functionalities:");
-//		      System.out.println(ElFac.findCodeByUserSyncString("user"));
-//			  QueryResultDTO res = ElFac.findCodeByLabelErrorSync(40.0);
-//			  System.out.println(res.code[0]);
 			  System.out.println("\n Polling kafka for labels\n");
 		      while (true) {
 		    	  
@@ -69,17 +56,12 @@ public class ElasticClient {
 		            String user = labels[2];
 		            String group = labels[3];
 	                
-		   			//System.out.println(ElFac.findCodeByUserSyncString("user"));
-	                //TODO returns only useful parts of the full json, like the hits array
-//		   			QueryResultDTO resError = ElFac.findCodeByLabelErrorSync(labelError);
-//		   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantSync(labelMutation);
 		   			String transactionName = "Transaction:" + record.key();
 
 		            try {
 		            	QueryResultDTO resError = ElFac.findCodeByLabelErrorCredentialsSync(labelError,user,group);
 			   			QueryResultDTO resMutation = ElFac.findCodeByLabelMutantCredentialsSync(labelMutation,user,group);
 			   			
-			   			//jedis.hset("Transaction:", "id", "valore");
 			   			
 		                jedis.hset(transactionName, "status", "FINISHED");
 		                jedis.hset(transactionName, "resultError", resError.onlyHitsJson);
@@ -91,19 +73,10 @@ public class ElasticClient {
 		                jedis.hset(transactionName, "resultError", "error during the orchestrator call to get the predictions in elastic-search, stacktrace:\n" + e.toString() );
 		                jedis.hset(transactionName, "resultMutation", "error, for more information see resultError field");
 		            }
-		   			//System.out.println(resError.fullJson);
-		   			//System.out.println(resError.onlyHitsJson);
 	               
 	            }
 		      }
 			
-			
-			//ElFac = (ElasticInterface)Naming.lookup("//localhost/ElasticFacade");
-			//ElFac.findCodeByLabelErrorSync(14.0);
-			//System.out.println(ElFac.getResult());
-//			System.out.println(ElFac.findCodeByUserSyncString("user"));
-//			QueryResultDTO res = ElFac.findCodeByLabelErrorSync(40.0);
-//			System.out.println(res.code[0]);
 		} catch(Exception e) {
 			consumer.close();
 			e.printStackTrace();
