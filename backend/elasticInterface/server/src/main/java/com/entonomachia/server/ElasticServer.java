@@ -13,6 +13,10 @@ public class ElasticServer{
 			if(InetAddress.getByName("elastic-search").isReachable(1000)) {
 				System.out.println("elastic-search server reachable");
 			}
+			else{
+				System.err.println("elastic-search server not reachable");
+				return;
+			}
 			exported = new ElasticInterfaceImplDTO();
 			//TESTING
 			//QueryResult res = new QueryResult();
