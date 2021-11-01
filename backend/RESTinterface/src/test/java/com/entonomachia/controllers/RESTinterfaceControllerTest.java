@@ -148,6 +148,35 @@ public class RESTinterfaceControllerTest {
                 .andExpect(jsonPath("$", CoreMatchers.notNullValue()))
                 .andExpect(jsonPath("$.status", is("FINISHED")));
     }
+
+    @Test
+    public void putImproveRequest_success() throws Exception {
+        ImproveModelData record = new ImproveModelData();
+                record.setIds("5");
+                record.setUser("TEST");
+                record.setGroup("SELF");
+                record.setCode("testing.code()");
+                record.setError("testing.code(morning)");
+        TransactionStatus RECORD_5 = new TransactionStatus("5", "FINISHED", "Thanks for the contribution", "Thanks for the contribution");
+
+                
+        Mockito.when(mockRedisInterface.getNewId()).thenReturn(4);
+                
+        Mockito.doNothing().doThrow(new RuntimeException()).when(mockKafkaProd).publishToTopic(gson.toJson(record),"improvemodelcode");
+
+        Mockito.when(mockTranRep.save(RECORD_5)).thenReturn(RECORD_5);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(gson.toJson(record));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", CoreMatchers.notNullValue()))
+                .andExpect(jsonPath("$.status", is("FINISHED")));
+    }
+
     
     @Test
     public void deleteTransaction_success() throws Exception {

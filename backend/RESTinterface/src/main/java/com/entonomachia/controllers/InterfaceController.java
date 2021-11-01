@@ -78,6 +78,30 @@ public class InterfaceController {
 
 	}
 	
+	// Sharing code
+	@PutMapping("")
+	String PUTsendImproveModelData(@Valid @RequestBody ImproveModelData newCode) {
+		
+		String placeholder="";
+		String newId = idGen.getNewId().toString();
+		newCode.setIds(newId);
+		newCode.setCodeWithNoComments(newCode.getCode());
+		newCode.setSolutionWithNoComments(newCode.getSolution());
+		placeholder = gson.toJson(newCode);
+		kafProd.publishToTopic(placeholder,"improvemodelcode");	
+		
+
+		TransactionStatus tran = new TransactionStatus();
+		tran.setId(newId);
+		tran.setStatus("FINISHED");
+		tran.setResultError("Thanks for the contribution");
+		tran.setResultMutation("Thanks for the contribution");
+		tranRep.save(tran);
+		return tran.toString();
+
+	}
+
+	
 	@PostMapping("/share")
 	String sendImproveModelData(@Valid @RequestBody ImproveModelData newCode) {
 		
