@@ -1,19 +1,19 @@
-<mxfile host="app.diagrams.net" modified="2021-11-01T16:02:38.924Z" agent="5.0 (X11)" etag="ymbpiFuYyoHVb3z_ArPN" version="15.6.3" type="github">
+<mxfile host="app.diagrams.net" modified="2021-11-01T17:05:54.274Z" agent="5.0 (X11)" etag="yahjbL_pvvIeW4DbeWmT" version="15.6.3" type="github">
   <diagram id="kgpKYQtTHZ0yAKxKKP6v" name="Page-1">
     <mxGraphModel dx="1422" dy="724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="3nuBFxr9cyL0pnOWT2aG-1" value="Client" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-          <mxGeometry x="120" y="80" width="100" height="760" as="geometry" />
+          <mxGeometry x="120" y="80" width="100" height="460" as="geometry" />
         </mxCell>
         <mxCell id="3nuBFxr9cyL0pnOWT2aG-5" value="API endpoint" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" parent="1" vertex="1">
-          <mxGeometry x="300" y="80" width="100" height="760" as="geometry" />
+          <mxGeometry x="300" y="80" width="100" height="460" as="geometry" />
         </mxCell>
-        <mxCell id="3nuBFxr9cyL0pnOWT2aG-8" value="POST(code,user,group)" style="verticalAlign=bottom;endArrow=block;entryX=0.47;entryY=0.088;shadow=0;strokeWidth=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="3nuBFxr9cyL0pnOWT2aG-1" target="3nuBFxr9cyL0pnOWT2aG-5" edge="1">
+        <mxCell id="3nuBFxr9cyL0pnOWT2aG-8" value="POST(code,user,group)" style="verticalAlign=bottom;endArrow=block;entryX=0.47;entryY=0.088;shadow=0;strokeWidth=1;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
           <mxGeometry relative="1" as="geometry">
-            <mxPoint x="175" y="160.0000000000001" as="sourcePoint" />
-            <mxPoint x="345" y="160.0000000000001" as="targetPoint" />
+            <mxPoint x="169.5" y="145.48000000000002" as="sourcePoint" />
+            <mxPoint x="347" y="145.48000000000002" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="3nuBFxr9cyL0pnOWT2aG-9" value="Transaction(id,status,results)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;entryX=0.5;entryY=0.145;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" edge="1">
@@ -26,7 +26,13 @@
           <mxGeometry x="230" y="201" width="60" height="20" as="geometry" />
         </mxCell>
         <mxCell id="3Bwb_A_XAJUhcDOnylW9-2" value="Redis&#xa;(transaction repo)&#xa;" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
-          <mxGeometry x="480" y="80" width="100" height="760" as="geometry" />
+          <mxGeometry x="480" y="80" width="100" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-18" value="save(id,status,results)" style="verticalAlign=bottom;endArrow=block;entryX=0.47;entryY=0.088;shadow=0;strokeWidth=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="3Bwb_A_XAJUhcDOnylW9-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-130" y="360" as="sourcePoint" />
+            <mxPoint x="47.5" y="360" as="targetPoint" />
+          </mxGeometry>
         </mxCell>
         <mxCell id="3Bwb_A_XAJUhcDOnylW9-3" value="save(id,status,results)" style="verticalAlign=bottom;endArrow=block;entryX=0.47;entryY=0.088;shadow=0;strokeWidth=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
@@ -62,9 +68,9 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="3Bwb_A_XAJUhcDOnylW9-9" value="Kafka" style="shape=umlLifeline;perimeter=lifelinePerimeter;container=1;collapsible=0;recursiveResize=0;rounded=0;shadow=0;strokeWidth=1;" vertex="1" parent="1">
-          <mxGeometry x="660" y="80" width="100" height="760" as="geometry" />
+          <mxGeometry x="660" y="80" width="100" height="460" as="geometry" />
         </mxCell>
-        <mxCell id="3Bwb_A_XAJUhcDOnylW9-10" value="produce(id,user,group,code)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" edge="1" parent="1">
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-10" value="producePrediction(id,user,group,code)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" edge="1" parent="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="350" y="192" as="sourcePoint" />
             <mxPoint x="709.5" y="192" as="targetPoint" />
@@ -72,6 +78,30 @@
         </mxCell>
         <mxCell id="3Bwb_A_XAJUhcDOnylW9-11" value="PENDING" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
           <mxGeometry x="405" y="157" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-12" value="PUT(code,solution,user,group)" style="verticalAlign=bottom;endArrow=block;entryX=0.47;entryY=0.088;shadow=0;strokeWidth=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="170" y="430" as="sourcePoint" />
+            <mxPoint x="347.5" y="430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-13" value="Transaction(id,status,results)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;entryX=0.5;entryY=0.145;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="486.32000000000005" as="sourcePoint" />
+            <mxPoint x="170.5" y="486.32000000000005" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-16" value="produceImprove(id,user,group,code,solution)" style="verticalAlign=bottom;endArrow=block;shadow=0;strokeWidth=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350.5" y="475.12" as="sourcePoint" />
+            <mxPoint x="710" y="475.12" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-17" value="transaction(id,&quot;FINISHED&quot;,&quot;Thanks&quot;)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="169" y="490" width="180" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="3Bwb_A_XAJUhcDOnylW9-19" value="FINISHED" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="405" y="440" width="60" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
