@@ -6,6 +6,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class ElasticInterfaceImplDTO extends UnicastRemoteObject implements ElasticInterface {
 
+	//TODO instantiate a single QueryResult and use It as an assembler for the QueryResultDTO to optimize
+
 	/**
 	 * 
 	 */
