@@ -1,4 +1,4 @@
-<mxfile modified="2021-10-05T08:27:11.783Z" host="app.diagrams.net" agent="5.0 (X11)" etag="WyQvg8WIlPqxCyPkH3l6" version="15.4.1" type="github">
+<mxfile modified="2021-11-09T09:26:22.610Z" host="app.diagrams.net" agent="5.0 (X11)" etag="SotYToVI1ifJEe-Sohmc" version="15.7.0" type="github">
   <diagram id="d1ab7348-05c3-a1e3-ca4d-12c340fd6b49" name="Page-1">
     <mxGraphModel dx="1422" dy="724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff" math="0" shadow="0">
       <root>
@@ -185,8 +185,14 @@
         <mxCell id="zV2KJMATmQ4PZGPN0N90-173" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/feather-2/24/x-128.png" parent="1" vertex="1">
           <mxGeometry x="347" y="277" width="73" height="73" as="geometry" />
         </mxCell>
-        <mxCell id="zV2KJMATmQ4PZGPN0N90-174" value="&lt;div&gt;Not for frontend implemented&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+        <mxCell id="zV2KJMATmQ4PZGPN0N90-174" value="&lt;div&gt;Not implemented&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="350" y="273.5" width="70" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="WNxYQy2lBHj_93GhBknH-162" value="" style="shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=#ffffff;imageAspect=0;aspect=fixed;image=https://cdn1.iconfinder.com/data/icons/feather-2/24/x-128.png" vertex="1" parent="1">
+          <mxGeometry x="837" y="670.5" width="46.5" height="46.5" as="geometry" />
+        </mxCell>
+        <mxCell id="WNxYQy2lBHj_93GhBknH-163" value="&lt;div style=&quot;font-size: 10px;&quot;&gt;Not implemented&lt;/div&gt;&lt;div style=&quot;font-size: 10px;&quot;&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="867" y="681" width="70" height="20" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
