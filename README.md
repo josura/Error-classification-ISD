@@ -77,7 +77,7 @@ On a web browser or with http requests, go to http://localhost:8888 and experime
 {
     "user": "GIORGIO",
     "group": "SELF",
-    "code": "if(testing=false){String goodbye = \"\";}"
+    "code": "if(testing = false){String goodbye = \"\";}"
 }
 ```
 > - POST requests like http://localhost:8888/share to share some code with errors and the corrected code to enhance the model that predicts errors and mutations, with a request body with the following json structure:
@@ -85,8 +85,9 @@ On a web browser or with http requests, go to http://localhost:8888 and experime
 {
     "user": "GIORGIO",
     "group": "ALL",
-    "code": "if(testing=false){String goodbye = \"\";}",
-    "solution": "if(testing==false){String goodbye = \"\";}"
+    "code": "if(testing = false){String goodbye = \"\";}",
+    "solution": "if(testing == false){String goodbye = \"\";}"
 }
 ```
+The code sended should not contains any comment and should have good spacing between words and operators.
 ![image](https://github.com/josura/Error-classification-ISD/blob/main/docs/Main.drawio.png?raw=true)
