@@ -1,3 +1,5 @@
+![image](https://github.com/josura/Error-classification-ISD/blob/main/Entonomachia_logo.png?raw=true)
+
 # (Entomomachia) Error-classification-ISD
 The aim of this project is to implement a complex distributed architecture with microservices to build an interface that could be used by a user to share some **code** and get predictions of **errors** and **mutations** based on the code of common repositories from [defect4j-dissection](https://github.com/program-repair/defects4j-dissection).
 
@@ -87,3 +89,4 @@ On a web browser or with http requests, go to http://localhost:8888 and experime
     "solution": "if(testing==false){String goodbye = \"\";}"
 }
 ```
+![image](https://github.com/josura/Error-classification-ISD/blob/main/docs/Main.drawio.png?raw=true)
