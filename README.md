@@ -89,5 +89,36 @@ On a web browser or with http requests, go to http://localhost:8888 and experime
     "solution": "if(testing == false){String goodbye = \"\";}"
 }
 ```
-The code sended should not contains any comment and should have good spacing between words and operators.
+**The code sended should not contains any comment and should have good spacing between words and operators.**
+
+# EXAMPLE
+An example is the following:
+1. The user will send a POST request with the following request body:
+```json
+{
+    "user": "GIORGIO",
+    "group": "SELF",
+    "code": "if(testing = false){String goodbye = \"\";}"
+}
+```
+2. The user will receive a response with the following body:
+```json
+{
+    "id":"411",
+	"status":"PENDING",
+    "resultError":"",
+    "resultMutation":""
+}
+```
+3. The user will query periodically until status is FINISHED or ERROR, the response body when the transaction has finished is the following:
+```json
+{
+    "id":"411",
+	"status":"FINISHED",
+    "resultError":"... \"code\" : \"....\", \"solution\": ....  ",
+    "resultMutation":"... \"code\" : \"....\", \"solution\": ....  "
+}
+```
+The resultError is a list of errors associated with solutions, It could be used to take only the solution and give them to the user in the web interface.
+The resultMutation is also a list of errors associated with solutions, the usage of this result is similar to the one with resultError, but the field taken could be code instead of solution, to predict the mutation.
 ![image](https://github.com/josura/Error-classification-ISD/blob/main/docs/Main.drawio.png?raw=true)
